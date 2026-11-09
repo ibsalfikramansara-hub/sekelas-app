@@ -1,0 +1,19 @@
+{
+  "name": "sekelas-app",
+  "version": "1.0.0",
+  "description": "Aplikasi Kelas Digital X.E-4 Bilingual ICT",
+  "private": true,
+  "main": "server-portable.js",
+  "scripts": {
+    "start": "node server-portable.js",
+    "test": "node test_suite.mjs",
+    "build": "echo 'Build complete'"
+  },
+  "keywords": [
+    "sekelas",
+    "kelas-digital",
+    "ict"
+  ],
+  "author": "X.E-4 ICT Team",
+  "license": "ISC"
+}
