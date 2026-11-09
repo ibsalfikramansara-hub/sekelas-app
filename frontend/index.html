@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SEKELAS — Aplikasi Kelas Digital</title>
+  <!-- Tailwind CSS (CDN untuk demo; produksi sebaiknya build via PostCSS/Vite) -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { sans: ['Plus Jakarta Sans', 'system-ui', 'sans-serif'] },
+          colors: {
+            brand: {
+              purple: '#5443E8',
+              purpleHover: '#4433D6',
+              purpleLight: '#8E54E9',
+              blue: '#0072ff',
+              coral: '#FF5E62',
+              amber: '#F7971E',
+              dark: '#1E1B4B',
+            },
+            canvas: '#F4F6FC',
+          },
+          borderRadius: { '2xl': '1.25rem', '3xl': '1.75rem' },
+          boxShadow: {
+            'glow-purple': '0 12px 28px -4px rgba(142, 84, 233, 0.35)',
+            'glow-blue': '0 12px 28px -4px rgba(0, 114, 255, 0.35)',
+            'glow-coral': '0 12px 28px -4px rgba(255, 94, 98, 0.35)',
+            'glow-amber': '0 12px 28px -4px rgba(247, 151, 30, 0.35)',
+            'card-modern': '0 10px 30px rgba(0, 0, 0, 0.04)',
+          },
+        },
+      },
+    };
+  </script>
+  <style>
+    body { font-family: 'Plus Jakarta Sans', system-ui, sans-serif; background-color: #F4F6FC; }
+    .sidebar-item.active { background: rgba(255, 255, 255, 0.22); color: #FFFFFF; font-weight: 700; }
+    .sidebar-item.active svg { fill: #FFFFFF; }
+    .glass { background: rgba(255,255,255,0.85); backdrop-filter: blur(12px); }
+  </style>
+</head>
+<body class="bg-[#F4F6FC] text-slate-800 antialiased h-screen overflow-hidden">
+
+  <!-- ===== LOADING OVERLAY (global) ===== -->
+  <div id="loading-overlay"
+       class="fixed inset-0 z-[100] bg-white/90 backdrop-blur-sm flex items-center justify-center hidden">
+    <div class="flex flex-col items-center gap-3">
+      <div class="w-10 h-10 border-4 border-primary-400 border-t-transparent rounded-full animate-spin"></div>
+      <p class="text-sm font-medium text-slate-600">Memuat...</p>
+    </div>
+  </div>
+
+  <!-- ===== TOAST CONTAINER (notifikasi) ===== -->
+  <div id="toast-container"
+       class="fixed bottom-5 right-5 z-[100] flex flex-col gap-2 pointer-events-none"></div>
+
+  <!-- ===== SPA SHELL ===== -->
+  <div id="app" class="h-full flex flex-col">
+
+    <!-- Login view (tampilan penuh, persis referensi kartu Sign in + Foto tidak transparan) -->
+    <div id="view-login" class="flex items-center justify-center h-full p-4 sm:p-6 bg-slate-100">
+      <div class="w-full max-w-4xl bg-white rounded-3xl shadow-2xl border border-slate-100 overflow-hidden flex flex-col md:flex-row min-h-[580px]">
+        
+        <!-- Sisi Kiri: Sign in Form -->
+        <div class="p-8 sm:p-12 md:w-1/2 flex flex-col justify-center bg-white">
+          <!-- Logo & Judul Aplikasi SEKELAS -->
+          <div class="flex items-center justify-center gap-2 mb-1.5">
+            <div class="w-9 h-9 bg-emerald-600 rounded-xl flex items-center justify-center text-white font-black text-lg shadow-md shadow-emerald-600/20">S</div>
+            <span class="text-xs font-black uppercase tracking-widest text-emerald-700">Digital Class</span>
+          </div>
+
+          <h1 class="text-3xl sm:text-4xl font-black text-slate-900 text-center mb-1 tracking-tight">SEKELAS</h1>
+          <p class="text-xs font-semibold text-slate-400 text-center uppercase tracking-wider mb-3">Aplikasi Kelas Digital X.E-4</p>
+          
+          <!-- Ikon Pintasan Role (Interaktif) -->
+          <div class="flex items-center justify-center gap-3 mb-2">
+            <button type="button" class="btn-demo-quick w-9 h-9 rounded-full border border-slate-200 flex items-center justify-center text-slate-600 text-xs font-bold shadow-xs hover:bg-emerald-50 hover:border-emerald-300 transition cursor-pointer" data-user="admin" data-role="admin" title="Masuk Cepat sebagai Admin">🛡️</button>
+            <button type="button" class="btn-demo-quick w-9 h-9 rounded-full border border-slate-200 flex items-center justify-center text-slate-600 text-xs font-bold shadow-xs hover:bg-emerald-50 hover:border-emerald-300 transition cursor-pointer" data-user="wali1" data-role="wali_kelas" title="Masuk Cepat sebagai Wali Kelas">👨‍🏫</button>
+            <button type="button" class="btn-demo-quick w-9 h-9 rounded-full border border-slate-200 flex items-center justify-center text-slate-600 text-xs font-bold shadow-xs hover:bg-emerald-50 hover:border-emerald-300 transition cursor-pointer" data-user="siswa1" data-role="siswa" title="Masuk Cepat sebagai Siswa">👨‍🎓</button>
+          </div>
+          
+          <p class="text-xs text-slate-400 text-center mb-4">Masuk ke akun kelas anda</p>
+
+          <form id="login-form" action="javascript:void(0);" class="space-y-3.5">
+            <div>
+              <input id="login-username" type="text" required
+                class="w-full px-4 py-3 rounded-xl bg-slate-100 border-none text-slate-800 text-sm placeholder:text-slate-400 focus:bg-white focus:ring-2 focus:ring-emerald-500 outline-none transition"
+                placeholder="Email / Username / NISN" />
+            </div>
+            <div>
+              <input id="login-password" type="password" required
+                class="w-full px-4 py-3 rounded-xl bg-slate-100 border-none text-slate-800 text-sm placeholder:text-slate-400 focus:bg-white focus:ring-2 focus:ring-emerald-500 outline-none transition"
+                placeholder="Password" />
+            </div>
+            <div>
+              <select id="login-role" required
+                class="w-full px-4 py-3 rounded-xl bg-slate-100 border-none text-slate-700 text-sm focus:bg-white focus:ring-2 focus:ring-emerald-500 outline-none transition">
+                <option value="">-- Pilih Role --</option>
+                <option value="siswa">Siswa / Pengurus Kelas</option>
+                <option value="wali_kelas">Wali Kelas</option>
+                <option value="guru_mapel">Guru Mapel</option>
+                <option value="orang_tua">Orang Tua Siswa</option>
+                <option value="admin">Administrator</option>
+              </select>
+            </div>
+
+            <div class="text-center pt-1">
+              <a href="javascript:void(0)" onclick="window.store && window.store.info('Untuk reset password, silakan hubungi Administrator atau Wali Kelas X.E-4 (Mr. Ahmad Yuwafi).')" class="text-xs text-slate-400 hover:text-slate-600 transition inline-block mb-3">Lupa kata sandi anda?</a>
+            </div>
+
+            <div class="text-center">
+              <button type="submit"
+                class="inline-flex items-center justify-center px-10 py-3 rounded-full bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-xs uppercase tracking-wider shadow-lg shadow-emerald-600/30 transition transform active:scale-95">
+                SIGN IN
+              </button>
+            </div>
+          </form>
+
+          <div class="mt-5 text-[11px] text-slate-400 text-center leading-relaxed border-t border-slate-100 pt-3">
+            <span class="font-bold text-slate-600 block mb-1">Klik Akun Demo Cepat (Semua Role):</span>
+            <button type="button" class="btn-demo-quick text-emerald-700 hover:text-emerald-900 font-bold underline px-1 cursor-pointer" data-user="admin" data-role="admin">admin</button> · 
+            <button type="button" class="btn-demo-quick text-emerald-700 hover:text-emerald-900 font-bold underline px-1 cursor-pointer" data-user="wali1" data-role="wali_kelas">wali1</button> · 
+            <button type="button" class="btn-demo-quick text-emerald-700 hover:text-emerald-900 font-bold underline px-1 cursor-pointer" data-user="guru1" data-role="guru_mapel">guru1</button> · 
+            <button type="button" class="btn-demo-quick text-emerald-700 hover:text-emerald-900 font-bold underline px-1 cursor-pointer" data-user="pengurus1" data-role="siswa">ketua</button> · 
+            <button type="button" class="btn-demo-quick text-emerald-700 hover:text-emerald-900 font-bold underline px-1 cursor-pointer" data-user="bendahara1" data-role="siswa">bendahara</button> · 
+            <button type="button" class="btn-demo-quick text-emerald-700 hover:text-emerald-900 font-bold underline px-1 cursor-pointer" data-user="siswa1" data-role="siswa">siswa1</button> · 
+            <button type="button" class="btn-demo-quick text-emerald-700 hover:text-emerald-900 font-bold underline px-1 cursor-pointer" data-user="ortu1" data-role="orang_tua">ortu1</button>
+            <div class="text-[10px] text-slate-400 mt-0.5">Password default: <span class="font-mono text-slate-600 font-bold">123456</span></div>
+          </div>
+        </div>
+
+        <!-- Sisi Kanan: Foto Kelas Tidak Transparan (Full Opacity) -->
+        <div class="md:w-1/2 relative min-h-[320px] md:min-h-full flex flex-col items-center justify-center text-center p-8 sm:p-12 overflow-hidden bg-slate-900">
+          <!-- Background Foto Kelas Asli (TIDAK TRANSPARAN, opacity 100%) -->
+          <img src="./assets/img/foto-kelas.jpg" alt="Foto Kelas X.E-4"
+            class="absolute inset-0 w-full h-full object-cover opacity-100 z-0" />
+          
+          <!-- Kontras teks agar terbaca jernih di atas foto -->
+          <div class="absolute inset-0 bg-gradient-to-t from-emerald-950/70 via-black/35 to-black/50 z-1"></div>
+
+          <!-- Teks Sapaan -->
+          <div class="relative z-10 text-white max-w-xs mx-auto">
+            <div class="inline-block px-3 py-1 rounded-full bg-white/20 backdrop-blur-md text-[10px] font-black tracking-widest uppercase mb-3 border border-white/30">
+              SEKELAS • X.E-4
+            </div>
+            <h2 class="text-3xl sm:text-4xl font-extrabold mb-3 tracking-tight drop-shadow-md">Halo, Teman!</h2>
+            <p class="text-white text-sm mb-7 leading-relaxed opacity-95 drop-shadow">
+              Daftarkan diri anda dan mulai gunakan layanan SEKELAS segera
+            </p>
+            <button type="button" onclick="document.getElementById('login-username').focus(); window.store && window.store.info('Pendaftaran akun baru dikelola terpusat oleh Administrator & Wali Kelas untuk menjaga keamanan kelas.');"
+              class="border-2 border-white text-white font-bold text-xs uppercase tracking-widest px-9 py-3 rounded-full hover:bg-white hover:text-emerald-700 transition shadow-lg transform active:scale-95">
+              SIGN UP
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- App shell (sidebar + navbar + content) -->
+    <div id="view-app" class="hidden h-full flex flex-col lg:flex-row overflow-hidden">
+
+      <!-- Sidebar Modern Purple Theme (Persis Referensi Gambar) -->
+      <aside id="sidebar"
+        class="w-64 bg-[#5443E8] text-white shadow-2xl flex flex-col z-30 hidden lg:flex transition-all">
+        <!-- Brand Logo S / Cloud -->
+        <div class="p-6 flex items-center gap-3 border-b border-white/10">
+          <div class="w-10 h-10 bg-white/20 backdrop-blur rounded-2xl flex items-center justify-center text-white font-black text-xl shadow-inner">
+            ☁
+          </div>
+          <div>
+            <div class="text-base font-extrabold text-white tracking-tight leading-tight">SEKELAS</div>
+            <div class="text-[10px] text-white/70 font-semibold uppercase tracking-wider">Kelas X.E-4 ICT</div>
+          </div>
+        </div>
+
+        <!-- Menu Navigation Items -->
+        <nav class="flex-1 overflow-y-auto p-4 space-y-1.5" aria-label="Menu utama">
+          <!-- Diisi dinamis oleh Sidebar.js -->
+        </nav>
+
+        <!-- User Profile & Logout di Bawah Sidebar (Persis Gambar) -->
+        <div class="p-4 border-t border-white/10 bg-black/10">
+          <button id="btn-logout"
+            class="w-full flex items-center gap-3 px-4 py-3 rounded-2xl text-xs font-bold text-white/80 hover:bg-white/15 hover:text-white transition">
+            <span>🚪</span>
+            <span>Keluar Akun</span>
+          </button>
+        </div>
+      </aside>
+
+      <!-- Main content canvas -->
+      <main class="flex-1 flex flex-col overflow-y-auto bg-[#F4F6FC] relative">
+
+        <!-- Top Header Navbar Modern -->
+        <header class="sticky top-0 z-20 bg-white/80 backdrop-blur-md border-b border-slate-200/60 flex items-center justify-between px-6 lg:px-8 py-3.5">
+          <div class="flex items-center gap-4">
+            <button id="btn-mobile-menu" class="lg:hidden p-2 text-slate-600 hover:text-indigo-600 rounded-xl hover:bg-slate-100">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
+            </button>
+            <h2 id="page-title" class="text-xl font-black text-slate-800 tracking-tight">Dashboard</h2>
+          </div>
+
+          <div class="flex items-center gap-3">
+            <!-- Date Filter Pill (Persis Gambar Referensi) -->
+            <div class="hidden sm:flex items-center gap-2 px-3.5 py-1.5 rounded-xl bg-slate-100 text-slate-600 text-xs font-semibold border border-slate-200/60 shadow-xs">
+              <span>📅</span>
+              <span>Semester Ganjil 2026/2027</span>
+            </div>
+
+            <!-- Role Badge -->
+            <span id="user-badge" class="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-full bg-indigo-50 text-indigo-700 text-xs font-bold border border-indigo-100">
+              <span id="user-role-badge">Siswa</span>
+            </span>
+
+            <!-- Profile Info -->
+            <div class="flex items-center gap-2 pl-3 border-l border-slate-200">
+              <div class="text-right hidden sm:block">
+                <div class="text-xs font-bold text-slate-900" id="user-fullname">Pengguna</div>
+                <div class="text-[11px] text-slate-400" id="user-username">@user</div>
+              </div>
+              <div class="w-9 h-9 rounded-full bg-indigo-600 text-white flex items-center justify-center font-bold text-xs shadow-md shadow-indigo-600/20 ring-2 ring-white overflow-hidden" id="user-avatar">?</div>
+            </div>
+          </div>
+        </header>
+
+        <!-- Page content container -->
+        <div id="page-content" class="p-6 lg:p-8">
+          <!-- Konten halaman diinisialkan oleh router -->
+        </div>
+
+      </main>
+    </div>
+
+  </div>
+
+  <!-- ===== Frontend Entry Point (ES Module) ===== -->
+  <script type="module" src="./src/js/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Absensi Kelas XE4</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#eef2ff',
+                            100: '#e0e7ff',
+                            500: '#6366f1',
+                            600: '#4f46e5',
+                            700: '#4338ca',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+    </style>
+</head>
+
+<body class="bg-slate-50 text-slate-800 min-h-screen pb-12">
+
+    <!-- Navigation Bar -->
+    <nav class="bg-white border-b border-slate-200 sticky top-0 z-30 shadow-xs">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <div class="bg-indigo-600 text-white p-2 rounded-xl">
+                    <i data-lucide="graduation-cap" class="w-6 h-6"></i>
+                </div>
+                <div>
+                    <h1 class="font-bold text-slate-900 leading-tight text-lg">Sistem Absensi Digital</h1>
+                    <p class="text-xs text-slate-500">Kelas XE4 • MAN 1 JEPARA
+                    </p>
+                </div>
+            </div>
+            <div class="flex items-center gap-2">
+                <span id="current-date" class="text-xs sm:text-sm font-medium text-slate-600 bg-slate-100 px-3 py-1.5 rounded-lg border border-slate-200 flex items-center gap-1.5">
+                    <i data-lucide="calendar" class="w-4 h-4 text-slate-500"></i>
+                    <span id="date-text">--</span>
+                </span>
+            </div>
+        </div>
+    </nav>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6">
+
+        <!-- Date Selection -->
+        <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-xs mb-6">
+            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                <div>
+                    <h3 class="font-semibold text-slate-800 flex items-center gap-2">
+                        <i data-lucide="calendar-days" class="w-5 h-5 text-indigo-600"></i>
+                        Tanggal Absensi
+                    </h3>
+                    <p class="text-xs text-slate-500 mt-1">
+                        Pilih tanggal untuk melihat atau mengisi absensi pada hari tersebut.
+                    </p>
+                </div>
+                <input
+                    type="date"
+                    id="attendanceDate"
+                    onchange="changeAttendanceDate()"
+                    class="px-4 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium text-slate-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white"
+                >
+            </div>
+        </div>
+
+        <!-- Welcome Banner -->
+        <div class="bg-gradient-to-r from-indigo-700 via-indigo-600 to-blue-600 text-white rounded-2xl p-6 sm:p-8 mb-6 shadow-md relative overflow-hidden">
+            <div class="absolute -right-10 -bottom-10 opacity-10 pointer-events-none">
+                <i data-lucide="users" class="w-80 h-80 text-white"></i>
+            </div>
+            <div class="relative z-10 max-w-2xl">
+                <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/20 backdrop-blur-md text-xs font-medium mb-3">
+                    <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                    Sesi Absensi Aktif
+                </div>
+                <h2 class="text-2xl sm:text-3xl font-bold tracking-tight">Presensi Kehadiran Kelas XE4</h2>
+                <p class="text-indigo-100 text-sm sm:text-base mt-2">
+                    Kelola dan pantau presensi 38 siswa kelas XE4 secara real-time. Pilih status kehadiran untuk masing-masing siswa di bawah ini.
+                </p>
+            </div>
+        </div>
+
+        <!-- Statistics Section -->
+        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-4 mb-6">
+            
+            <!-- Total Siswa -->
+            <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-xs">
+                <div class="flex items-center justify-between text-slate-500 mb-2">
+                    <span class="text-xs font-semibold uppercase tracking-wider">Total</span>
+                    <i data-lucide="users" class="w-4 h-4 text-slate-400"></i>
+                </div>
+                <p id="stat-total" class="text-2xl font-bold text-slate-800">38</p>
+                <p class="text-[11px] text-slate-500 mt-0.5">Siswa Terdaftar</p>
+            </div>
+
+            <!-- Hadir -->
+            <div class="bg-white p-4 rounded-xl border border-emerald-100 bg-emerald-50/30 shadow-xs">
+                <div class="flex items-center justify-between text-emerald-600 mb-2">
+                    <span class="text-xs font-semibold uppercase tracking-wider">Hadir</span>
+                    <i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-500"></i>
+                </div>
+                <p id="stat-hadir" class="text-2xl font-bold text-emerald-600">0</p>
+                <p id="percent-hadir" class="text-[11px] text-emerald-600/80 mt-0.5">0% dari total</p>
+            </div>
+
+            <!-- Izin -->
+            <div class="bg-white p-4 rounded-xl border border-amber-100 bg-amber-50/30 shadow-xs">
+                <div class="flex items-center justify-between text-amber-600 mb-2">
+                    <span class="text-xs font-semibold uppercase tracking-wider">Izin</span>
+                    <i data-lucide="file-text" class="w-4 h-4 text-amber-500"></i>
+                </div>
+                <p id="stat-izin" class="text-2xl font-bold text-amber-600">0</p>
+                <p id="percent-izin" class="text-[11px] text-amber-600/80 mt-0.5">0% dari total</p>
+            </div>
+
+            <!-- Sakit -->
+            <div class="bg-white p-4 rounded-xl border border-blue-100 bg-blue-50/30 shadow-xs">
+                <div class="flex items-center justify-between text-blue-600 mb-2">
+                    <span class="text-xs font-semibold uppercase tracking-wider">Sakit</span>
+                    <i data-lucide="stethoscope" class="w-4 h-4 text-blue-500"></i>
+                </div>
+                <p id="stat-sakit" class="text-2xl font-bold text-blue-600">0</p>
+                <p id="percent-sakit" class="text-[11px] text-blue-600/80 mt-0.5">0% dari total</p>
+            </div>
+
+            <!-- Alpa -->
+            <div class="bg-white p-4 rounded-xl border border-rose-100 bg-rose-50/30 shadow-xs">
+                <div class="flex items-center justify-between text-rose-600 mb-2">
+                    <span class="text-xs font-semibold uppercase tracking-wider">Alpa</span>
+                    <i data-lucide="x-circle" class="w-4 h-4 text-rose-500"></i>
+                </div>
+                <p id="stat-alpa" class="text-2xl font-bold text-rose-600">0</p>
+                <p id="percent-alpa" class="text-[11px] text-rose-600/80 mt-0.5">0% dari total</p>
+            </div>
+
+            <!-- Belum Mengisi -->
+            <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-xs">
+                <div class="flex items-center justify-between text-slate-500 mb-2">
+                    <span class="text-xs font-semibold uppercase tracking-wider">Belum Absen</span>
+                    <i data-lucide="clock" class="w-4 h-4 text-slate-400"></i>
+                </div>
+                <p id="stat-belum" class="text-2xl font-bold text-slate-600">38</p>
+                <p id="percent-belum" class="text-[11px] text-slate-500 mt-0.5">100% dari total</p>
+            </div>
+
+        </div>
+
+        <!-- Controls Toolbar -->
+        <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-xs mb-6 flex flex-col lg:flex-row gap-4 items-stretch lg:items-center justify-between">
+            
+            <!-- Search & Filter Controls -->
+            <div class="flex flex-col sm:flex-row gap-3 flex-grow max-w-2xl">
+                <!-- Search Box -->
+                <div class="relative flex-grow">
+                    <i data-lucide="search" class="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400"></i>
+                    <input 
+                        type="text" 
+                        id="searchInput"
+                        placeholder="Cari Berdasarkan Nama atau NISN..." 
+                        class="w-full pl-10 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white transition"
+                        oninput="filterStudents()"
+                    >
+                </div>
+
+                <!-- Status Filter -->
+                <div class="sm:w-48">
+                    <select 
+                        id="statusFilter" 
+                        onchange="filterStudents()"
+                        class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm text-slate-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white transition"
+                    >
+                        <option value="ALL">Semua Status</option>
+                        <option value="Hadir">Hadir</option>
+                        <option value="Izin">Izin</option>
+                        <option value="Sakit">Sakit</option>
+                        <option value="Alpa">Alpa</option>
+                        <option value="Belum Absen">Belum Absen</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Quick Action Buttons -->
+            <div class="flex items-center gap-2">
+                <button 
+                    onclick="markAllHadir()" 
+                    class="flex-1 sm:flex-none px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-medium text-sm rounded-xl transition flex items-center justify-center gap-2 shadow-xs active:scale-95"
+                >
+                    <i data-lucide="check-check" class="w-4 h-4"></i>
+                    <span>Tandai Semua Hadir</span>
+                </button>
+                <button 
+                    onclick="resetAllAttendance()" 
+                    class="flex-1 sm:flex-none px-4 py-2 bg-slate-100 hover:bg-rose-50 text-slate-600 hover:text-rose-600 border border-slate-200 hover:border-rose-200 font-medium text-sm rounded-xl transition flex items-center justify-center gap-2 active:scale-95"
+                >
+                    <i data-lucide="rotate-ccw" class="w-4 h-4"></i>
+                    <span>Reset Absensi</span>
+                </button>
+            </div>
+
+        </div>
+
+        <!-- Student Table Section -->
+        <div class="bg-white rounded-2xl border border-slate-200 shadow-xs overflow-hidden">
+            <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse">
+                    <thead>
+                        <tr class="bg-slate-50 border-b border-slate-200 text-xs font-semibold text-slate-500 uppercase tracking-wider">
+                            <th class="py-3.5 px-4 text-center w-12">No</th>
+                            <th class="py-3.5 px-4 w-36">NISN</th>
+                            <th class="py-3.5 px-4">Nama Siswa</th>
+                            <th class="py-3.5 px-4 w-72">Status Kehadiran</th>
+                            <th class="py-3.5 px-4 text-center w-24">Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody id="studentTableBody" class="divide-y divide-slate-100 text-sm">
+                        <!-- Data will be loaded via JS -->
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Empty State -->
+            <div id="emptyState" class="hidden py-12 text-center">
+                <div class="w-12 h-12 rounded-full bg-slate-100 text-slate-400 flex items-center justify-center mx-auto mb-3">
+                    <i data-lucide="user-x" class="w-6 h-6"></i>
+                </div>
+                <h3 class="text-slate-800 font-medium text-sm">Tidak ada data siswa ditemukan</h3>
+                <p class="text-slate-400 text-xs mt-1">Coba sesuaikan kata kunci pencarian atau filter Anda.</p>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Notification Toast -->
+    <div id="toast" class="fixed bottom-5 right-5 bg-slate-900 text-white px-4 py-3 rounded-xl shadow-lg transform translate-y-20 opacity-0 transition-all duration-300 flex items-center gap-3 z-50">
+        <i data-lucide="check-circle" class="w-5 h-5 text-emerald-400"></i>
+        <span id="toast-message" class="text-sm font-medium">Status berhasil diperbarui</span>
+    </div>
+
+    <script>
+        // List data siswa XE4
+        const rawStudentsData = [
+            { no: 1, name: "AHMAD AJRIEL IRFAN", nisn: "3113134417" },
+            { no: 2, name: "AHMAD FAIRUZ SYIHAB ARAFIF", nisn: "109907075" },
+            { no: 3, name: "AINUL FUTICHATUR RIZQOH", nisn: "3119007535" },
+            { no: 4, name: "ANDHIKA ADI SAPUTRA", nisn: "3118784599" },
+            { no: 5, name: "AQILA MUMTAZ EL HADY", nisn: "109023481" },
+            { no: 6, name: "AULIA ZAHWA IZZATUNNISA'", nisn: "3119706760" },
+            { no: 7, name: "AURELIA NAMIRA RAMANIYA", nisn: "116481535" },
+            { no: 8, name: "AZAM YUSUF MANSUR", nisn: "3109473102" },
+            { no: 9, name: "BRIAN ARVIN YUDA ALBAIHAQI", nisn: "117855860" },
+            { no: 10, name: "DEFAAIQSYAH HIBATULLAH ABRAAR", nisn: "119627218" },
+            { no: 11, name: "DIFA FAUQI AIS FADILLA", nisn: "104123454" },
+            { no: 12, name: "FAIQ AULIA AMALI", nisn: "115210544" },
+            { no: 13, name: "FAISAL FATHIN BAYHAQI", nisn: "119053042" },
+            { no: 14, name: "FARHATUL ATIKAH", nisn: "104950340" },
+            { no: 15, name: "FITRI AMALIA HIDAYAH", nisn: "112794554" },
+            { no: 16, name: "HAJIRA NADA SALSABILA", nisn: "114320219" },
+            { no: 17, name: "HANNA AULIA", nisn: "109410011" },
+            { no: 18, name: "HISHAM MUHAMMAD SHOFA", nisn: "112135323" },
+            { no: 19, name: "ILHAM EKI NUR HAKIM", nisn: "3106587065" },
+            { no: 20, name: "ILHAM PRABU MUKTAMAR", nisn: "102010096" },
+            { no: 21, name: "KAMILAH NA'ILATUN NIHLAH", nisn: "109073961" },
+            { no: 22, name: "KEISHA NISWATUN SUPRIYANTO", nisn: "112591827" },
+            { no: 23, name: "KHUSNA AULIYAUSSYIFA", nisn: "107110024" },
+            { no: 24, name: "MOH NIQOBULLUBAB", nisn: "3111746654" },
+            { no: 25, name: "MUHAMMAD BALYA SAMAHAT", nisn: "114021681" },
+            { no: 26, name: "MUHAMMAD HAZIM AL FANANI", nisn: "115101434" },
+            { no: 27, name: "MUHAMMAD MUFLIH ALMURTADLO", nisn: "105200137" },
+            { no: 28, name: "MUHAMMAD RAFIF ARYAJUNA", nisn: "112092406" },
+            { no: 29, name: "MUHAMMAD ZIVAN", nisn: "113808184" },
+            { no: 30, name: "NABILA TSABITA PUTRI MUSTOFA", nisn: "111982065" },
+            { no: 31, name: "NASYWA TSABITA HAWA", nisn: "116407130" },
+            { no: 32, name: "NIA RAHMA IZZATI", nisn: "112915814" },
+            { no: 33, name: "RAFKA ARYA MAULANA", nisn: "106767818" },
+            { no: 34, name: "RONALD SANJAYA", nisn: "106562309" },
+            { no: 35, name: "SYAKIRA KHANSA SANTOSO", nisn: "104192943" },
+            { no: 36, name: "WILDA AYU SHOLIKHAH", nisn: "114329572" },
+            { no: 37, name: "ZAHARA NUR AULIA", nisn: "101472369" },
+            { no: 38, name: "ZAHIRA PUTRI FITRIA KHOIRUNNISA", nisn: "113060981" }
+        ];
+
+        // Data absensi dipisahkan berdasarkan tanggal
+        let attendanceData = {};
+        let selectedDate = getTodayKey();
+
+        // Inisialisasi Aplikasi
+        document.addEventListener("DOMContentLoaded", function () {
+            selectedDate = getTodayKey();
+
+            const dateInput = document.getElementById("attendanceDate");
+            dateInput.value = selectedDate;
+
+            displayDate();
+            loadAttendanceFromStorage();
+            renderTable();
+            updateStatistics();
+            lucide.createIcons();
+        });
+
+        // Menghasilkan format tanggal YYYY-MM-DD untuk penyimpanan
+        function getTodayKey() {
+            const now = new Date();
+            const year = now.getFullYear();
+            const month = String(now.getMonth() + 1).padStart(2, '0');
+            const day = String(now.getDate()).padStart(2, '0');
+            return `${year}-${month}-${day}`;
+        }
+
+        // Format tanggal agar tampil dalam bahasa Indonesia
+        function formatIndonesianDate(dateKey) {
+            const date = new Date(dateKey + "T00:00:00");
+            return date.toLocaleDateString('id-ID', {
+                weekday: 'long',
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
+        }
+
+        function displayDate() {
+            document.getElementById("date-text").textContent =
+                formatIndonesianDate(selectedDate);
+        }
+
+        // Mengganti tanggal absensi
+        function changeAttendanceDate() {
+            const input = document.getElementById("attendanceDate");
+            selectedDate = input.value || getTodayKey();
+
+            displayDate();
+            loadAttendanceFromStorage();
+            renderTable();
+            updateStatistics();
+
+            showToast(`Membuka absensi ${formatIndonesianDate(selectedDate)}`);
+        }
+
+        // Format penyimpanan:
+        // {
+        //   "2026-09-26": { "NISN": "Hadir" },
+        //   "2026-09-27": { "NISN": "Izin" }
+        // }
+        // Jadi setiap tanggal mempunyai data absensinya sendiri.
+
+        // Muat seluruh data absensi dari localStorage
+        function loadAttendanceFromStorage() {
+            const saved = localStorage.getItem("xe4_attendance_by_date");
+
+            if (saved) {
+                try {
+                    attendanceData = JSON.parse(saved);
+                } catch (e) {
+                    attendanceData = {};
+                }
+            } else {
+                attendanceData = {};
+            }
+
+            // Data untuk tanggal yang sedang dipilih
+            if (!attendanceData[selectedDate]) {
+                attendanceData[selectedDate] = {};
+            }
+
+            attendanceData = attendanceData;
+        }
+
+        // Ambil data absensi untuk tanggal yang sedang dipilih
+        function getCurrentAttendance() {
+            if (!attendanceData[selectedDate]) {
+                attendanceData[selectedDate] = {};
+            }
+            return attendanceData[selectedDate];
+        }
+
+        // Simpan data berdasarkan tanggal
+        function saveAttendanceToStorage() {
+            localStorage.setItem(
+                "xe4_attendance_by_date",
+                JSON.stringify(attendanceData)
+            );
+            updateStatistics();
+        }
+
+        // Update status individu
+        function setAttendance(nisn, status) {
+            getCurrentAttendance()[nisn] = status;
+            saveAttendanceToStorage();
+            
+            // Re-render specific row or whole filtered view
+            filterStudents();
+            showToast(`Status ${getStudentName(nisn)} diubah menjadi ${status}`);
+        }
+
+        function getStudentName(nisn) {
+            const student = rawStudentsData.find(s => s.nisn === nisn);
+            return student ? student.name : 'Siswa';
+        }
+
+        // Reset status individu
+        function resetIndividual(nisn) {
+            delete getCurrentAttendance()[nisn];
+            saveAttendanceToStorage();
+            filterStudents();
+            showToast(`Absensi ${getStudentName(nisn)} telah direset`);
+        }
+
+        // Tandai semua hadir
+        function markAllHadir() {
+            rawStudentsData.forEach(student => {
+                getCurrentAttendance()[student.nisn] = 'Hadir';
+            });
+            saveAttendanceToStorage();
+            filterStudents();
+            showToast("Semua siswa ditandai HADIR");
+        }
+
+        // Reset semua absensi
+        function resetAllAttendance() {
+            if (confirm(`Apakah Anda yakin ingin mereset seluruh data absensi untuk ${formatIndonesianDate(selectedDate)}?`)) {
+                attendanceData[selectedDate] = {};
+                saveAttendanceToStorage();
+                filterStudents();
+                showToast(`Absensi ${formatIndonesianDate(selectedDate)} berhasil direset`);
+            }
+        }
+
+        // Update statistik ringkasan
+        function updateStatistics() {
+            const total = rawStudentsData.length;
+            let hadir = 0, izin = 0, sakit = 0, alpa = 0, belum = 0;
+
+            const currentAttendance = getCurrentAttendance();
+
+            rawStudentsData.forEach(s => {
+                const status = currentAttendance[s.nisn];
+                if (status === 'Hadir') hadir++;
+                else if (status === 'Izin') izin++;
+                else if (status === 'Sakit') sakit++;
+                else if (status === 'Alpa') alpa++;
+                else belum++;
+            });
+
+            document.getElementById('stat-total').textContent = total;
+            document.getElementById('stat-hadir').textContent = hadir;
+            document.getElementById('stat-izin').textContent = izin;
+            document.getElementById('stat-sakit').textContent = sakit;
+            document.getElementById('stat-alpa').textContent = alpa;
+            document.getElementById('stat-belum').textContent = belum;
+
+            // Update persentase
+            document.getElementById('percent-hadir').textContent = `${Math.round((hadir/total)*100)}% dari total`;
+            document.getElementById('percent-izin').textContent = `${Math.round((izin/total)*100)}% dari total`;
+            document.getElementById('percent-sakit').textContent = `${Math.round((sakit/total)*100)}% dari total`;
+            document.getElementById('percent-alpa').textContent = `${Math.round((alpa/total)*100)}% dari total`;
+            document.getElementById('percent-belum').textContent = `${Math.round((belum/total)*100)}% dari total`;
+        }
+
+        // Filter dan render tabel
+        function filterStudents() {
+            const searchKeyword = document.getElementById("searchInput").value.toLowerCase();
+            const selectedStatus = document.getElementById("statusFilter").value;
+
+            const filtered = rawStudentsData.filter(student => {
+                const matchesSearch = student.name.toLowerCase().includes(searchKeyword) || student.nisn.includes(searchKeyword);
+                const currentStatus = getCurrentAttendance()[student.nisn] || 'Belum Absen';
+                
+                const matchesStatus = (selectedStatus === 'ALL') || (currentStatus === selectedStatus);
+
+                return matchesSearch && matchesStatus;
+            });
+
+            renderTable(filtered);
+        }
+
+        // Render tabel siswa
+        function renderTable(students = rawStudentsData) {
+            const tbody = document.getElementById("studentTableBody");
+            const emptyState = document.getElementById("emptyState");
+            tbody.innerHTML = "";
+
+            if (students.length === 0) {
+                emptyState.classList.remove("hidden");
+                return;
+            } else {
+                emptyState.classList.add("hidden");
+            }
+
+            students.forEach((student) => {
+                const status = getCurrentAttendance()[student.nisn] || 'Belum Absen';
+                const tr = document.createElement("tr");
+                tr.className = "hover:bg-slate-50/80 transition border-b border-slate-100";
+
+                // Badges/Pill Styles
+                let statusBadge = '';
+                if (status === 'Hadir') {
+                    statusBadge = `<span class="inline-flex items-center gap-1 text-xs px-2.5 py-1 rounded-full bg-emerald-100 text-emerald-700 font-medium"><i data-lucide="check-circle-2" class="w-3.5 h-3.5"></i> Hadir</span>`;
+                } else if (status === 'Izin') {
+                    statusBadge = `<span class="inline-flex items-center gap-1 text-xs px-2.5 py-1 rounded-full bg-amber-100 text-amber-700 font-medium"><i data-lucide="file-text" class="w-3.5 h-3.5"></i> Izin</span>`;
+                } else if (status === 'Sakit') {
+                    statusBadge = `<span class="inline-flex items-center gap-1 text-xs px-2.5 py-1 rounded-full bg-blue-100 text-blue-700 font-medium"><i data-lucide="stethoscope" class="w-3.5 h-3.5"></i> Sakit</span>`;
+                } else if (status === 'Alpa') {
+                    statusBadge = `<span class="inline-flex items-center gap-1 text-xs px-2.5 py-1 rounded-full bg-rose-100 text-rose-700 font-medium"><i data-lucide="x-circle" class="w-3.5 h-3.5"></i> Alpa</span>`;
+                } else {
+                    statusBadge = `<span class="inline-flex items-center gap-1 text-xs px-2.5 py-1 rounded-full bg-slate-100 text-slate-500 font-medium"><i data-lucide="clock" class="w-3.5 h-3.5"></i> Belum Absen</span>`;
+                }
+
+                tr.innerHTML = `
+                    <td class="py-3 px-4 text-center text-slate-400 font-medium text-xs">${student.no}</td>
+                    <td class="py-3 px-4 font-mono text-xs text-slate-500">${student.nisn}</td>
+                    <td class="py-3 px-4">
+                        <div class="font-semibold text-slate-800">${student.name}</div>
+                        <div class="mt-0.5">${statusBadge}</div>
+                    </td>
+                    <td class="py-3 px-4">
+                        <!-- Quick Action Buttons for Attendance -->
+                        <div class="flex items-center gap-1">
+                            <button 
+                                onclick="setAttendance('${student.nisn}', 'Hadir')" 
+                                class="px-2.5 py-1.5 text-xs font-semibold rounded-lg border ${status === 'Hadir' ? 'bg-emerald-600 text-white border-emerald-600 shadow-xs' : 'bg-white text-slate-600 border-slate-200 hover:bg-emerald-50 hover:text-emerald-600 hover:border-emerald-200'} transition"
+                            >
+                                Hadir
+                            </button>
+                            <button 
+                                onclick="setAttendance('${student.nisn}', 'Izin')" 
+                                class="px-2.5 py-1.5 text-xs font-semibold rounded-lg border ${status === 'Izin' ? 'bg-amber-500 text-white border-amber-500 shadow-xs' : 'bg-white text-slate-600 border-slate-200 hover:bg-amber-50 hover:text-amber-600 hover:border-amber-200'} transition"
+                            >
+                                Izin
+                            </button>
+                            <button 
+                                onclick="setAttendance('${student.nisn}', 'Sakit')" 
+                                class="px-2.5 py-1.5 text-xs font-semibold rounded-lg border ${status === 'Sakit' ? 'bg-blue-600 text-white border-blue-600 shadow-xs' : 'bg-white text-slate-600 border-slate-200 hover:bg-blue-50 hover:text-blue-600 hover:border-blue-200'} transition"
+                            >
+                                Sakit
+                            </button>
+                            <button 
+                                onclick="setAttendance('${student.nisn}', 'Alpa')" 
+                                class="px-2.5 py-1.5 text-xs font-semibold rounded-lg border ${status === 'Alpa' ? 'bg-rose-600 text-white border-rose-600 shadow-xs' : 'bg-white text-slate-600 border-slate-200 hover:bg-rose-50 hover:text-rose-600 hover:border-rose-200'} transition"
+                            >
+                                Alpa
+                            </button>
+                        </div>
+                    </td>
+                    <td class="py-3 px-4 text-center">
+                        <button 
+                            onclick="resetIndividual('${student.nisn}')" 
+                            title="Reset Kehadiran Siswa Ini"
+                            class="p-1.5 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition inline-flex items-center justify-center"
+                        >
+                            <i data-lucide="rotate-ccw" class="w-4 h-4"></i>
+                        </button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+
+            lucide.createIcons();
+        }
+
+        // Toast Notification
+        let toastTimeout;
+        function showToast(message) {
+            const toast = document.getElementById("toast");
+            const toastMsg = document.getElementById("toast-message");
+            
+            toastMsg.textContent = message;
+            toast.classList.remove("translate-y-20", "opacity-0");
+            toast.classList.add("translate-y-0", "opacity-100");
+
+            clearTimeout(toastTimeout);
+            toastTimeout = setTimeout(() => {
+                toast.classList.remove("translate-y-0", "opacity-100");
+                toast.classList.add("translate-y-20", "opacity-0");
+            }, 2500);
+        }
+    </script>
+</body>
+</html>

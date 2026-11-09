@@ -1,0 +1,570 @@
+{
+  "app": "SEKELAS",
+  "version": "1.0.0",
+  "exportedAt": "2026-11-09T15:02:12.596Z",
+  "users": [
+    {
+      "id": 1,
+      "username": "admin",
+      "password": "123456",
+      "fullName": "Administrator ICT",
+      "email": "admin@sekelas.sch.id",
+      "role": "admin",
+      "jabatanPengurus": "anggota",
+      "nip": "ADM-001",
+      "nis": null,
+      "parentOfName": null,
+      "isActive": true,
+      "createdAt": "2026-07-15"
+    },
+    {
+      "id": 2,
+      "username": "wali1",
+      "password": "123456",
+      "fullName": "Mr. Ahmad Yuwafi",
+      "email": "yuwafi@sekelas.sch.id",
+      "role": "wali_kelas",
+      "jabatanPengurus": "anggota",
+      "nip": "G-002",
+      "nis": null,
+      "parentOfName": null,
+      "isActive": true,
+      "createdAt": "2026-07-15"
+    },
+    {
+      "id": 3,
+      "username": "guru1",
+      "password": "123456",
+      "fullName": "Ms. Wilda Ulfiyanti, S.Kom",
+      "email": "wilda@sekelas.sch.id",
+      "role": "guru_mapel",
+      "jabatanPengurus": "anggota",
+      "nip": "G-001",
+      "nis": null,
+      "parentOfName": null,
+      "isActive": true,
+      "createdAt": "2026-07-15"
+    },
+    {
+      "id": 4,
+      "username": "pengurus1",
+      "password": "123456",
+      "fullName": "KEISHA NISWATUN SUPRIYANTO",
+      "email": "keisha@sekelas.sch.id",
+      "role": "siswa",
+      "jabatanPengurus": "ketua_kelas",
+      "nip": null,
+      "nis": "112591827",
+      "parentOfName": null,
+      "isActive": true,
+      "createdAt": "2026-07-16"
+    },
+    {
+      "id": 5,
+      "username": "sekretaris1",
+      "password": "123456",
+      "fullName": "NABILA TSABITA PUTRI MUSTOFA",
+      "email": "nabila@sekelas.sch.id",
+      "role": "siswa",
+      "jabatanPengurus": "sekretaris",
+      "nip": null,
+      "nis": "111982065",
+      "parentOfName": null,
+      "isActive": true,
+      "createdAt": "2026-07-16"
+    },
+    {
+      "id": 6,
+      "username": "bendahara1",
+      "password": "123456",
+      "fullName": "HANNA AULIA",
+      "email": "hanna@sekelas.sch.id",
+      "role": "siswa",
+      "jabatanPengurus": "bendahara",
+      "nip": null,
+      "nis": "109410011",
+      "parentOfName": null,
+      "isActive": true,
+      "createdAt": "2026-07-16"
+    },
+    {
+      "id": 7,
+      "username": "siswa1",
+      "password": "123456",
+      "fullName": "AHMAD AJRIEL IRFAN",
+      "email": "ajriel@sekelas.sch.id",
+      "role": "siswa",
+      "jabatanPengurus": "anggota",
+      "nip": null,
+      "nis": "3113134417",
+      "parentOfName": null,
+      "isActive": true,
+      "createdAt": "2026-07-16"
+    },
+    {
+      "id": 8,
+      "username": "siswa2",
+      "password": "123456",
+      "fullName": "BRIAN ARVIN YUDA ALBAIHAQI",
+      "email": "brian@sekelas.sch.id",
+      "role": "siswa",
+      "jabatanPengurus": "anggota",
+      "nip": null,
+      "nis": "117855860",
+      "parentOfName": null,
+      "isActive": true,
+      "createdAt": "2026-07-16"
+    },
+    {
+      "id": 9,
+      "username": "ortu1",
+      "password": "123456",
+      "fullName": "Bpk. Irfan (Wali Ahmad Ajriel)",
+      "email": "irfan.ortu@gmail.com",
+      "role": "orang_tua",
+      "jabatanPengurus": "anggota",
+      "nip": null,
+      "nis": "3113134417",
+      "parentOfName": "AHMAD AJRIEL IRFAN",
+      "isActive": true,
+      "createdAt": "2026-07-17"
+    }
+  ],
+  "students": [
+    {
+      "no": 1,
+      "name": "AHMAD AJRIEL IRFAN",
+      "nisn": "3113134417",
+      "gender": "L",
+      "jabatan": "Anggota"
+    },
+    {
+      "no": 2,
+      "name": "AHMAD FAIRUZ SYIHAB ARAFIF",
+      "nisn": "109907075",
+      "gender": "L",
+      "jabatan": "Seksi Kebersihan"
+    },
+    {
+      "no": 3,
+      "name": "AINUL FUTICHATUR RIZQOH",
+      "nisn": "3119007535",
+      "gender": "P",
+      "jabatan": "Anggota"
+    },
+    {
+      "no": 4,
+      "name": "ANDHIKA ADI SAPUTRA",
+      "nisn": "3118784599",
+      "gender": "L",
+      "jabatan": "Anggota"
+    },
+    {
+      "no": 5,
+      "name": "AQILA MUMTAZ EL HADY",
+      "nisn": "109023481",
+      "gender": "P",
+      "jabatan": "Anggota"
+    },
+    {
+      "no": 6,
+      "name": "AULIA ZAHWA IZZATUNNISA'",
+      "nisn": "3119706760",
+      "gender": "P",
+      "jabatan": "Anggota"
+    },
+    {
+      "no": 7,
+      "name": "AURELIA NAMIRA RAMANIYA",
+      "nisn": "116481535",
+      "gender": "P",
+      "jabatan": "Anggota"
+    },
+    {
+      "no": 8,
+      "name": "AZAM YUSUF MANSUR",
+      "nisn": "3109473102",
+      "gender": "L",
+      "jabatan": "Seksi Keamanan"
+    },
+    {
+      "no": 9,
+      "name": "BRIAN ARVIN YUDA ALBAIHAQI",
+      "nisn": "117855860",
+      "gender": "L",
+      "jabatan": "Anggota"
+    },
+    {
+      "no": 10,
+      "name": "DEFAAIQSYAH HIBATULLAH ABRAAR",
+      "nisn": "119627218",
+      "gender": "L",
+      "jabatan": "Anggota"
+    },
+    {
+      "no": 11,
+      "name": "DIFA FAUQI AIS FADILLA",
+      "nisn": "104123454",
+      "gender": "P",
+      "jabatan": "Anggota"
+    },
+    {
+      "no": 12,
+      "name": "FAIQ AULIA AMALI",
+      "nisn": "115210544",
+      "gender": "L",
+      "jabatan": "Anggota"
+    },
+    {
+      "no": 13,
+      "name": "FAISAL FATHIN BAYHAQI",
+      "nisn": "119053042",
+      "gender": "L",
+      "jabatan": "Anggota"
+    },
+    {
+      "no": 14,
+      "name": "FARHATUL ATIKAH",
+      "nisn": "104950340",
+      "gender": "P",
+      "jabatan": "Anggota"
+    },
+    {
+      "no": 15,
+      "name": "FITRI AMALIA HIDAYAH",
+      "nisn": "112794554",
+      "gender": "P",
+      "jabatan": "Anggota"
+    },
+    {
+      "no": 16,
+      "name": "HAJIRA NADA SALSABILA",
+      "nisn": "114320219",
+      "gender": "P",
+      "jabatan": "Anggota"
+    },
+    {
+      "no": 17,
+      "name": "HANNA AULIA",
+      "nisn": "109410011",
+      "gender": "P",
+      "jabatan": "Bendahara"
+    },
+    {
+      "no": 18,
+      "name": "HISHAM MUHAMMAD SHOFA",
+      "nisn": "112135323",
+      "gender": "L",
+      "jabatan": "Anggota"
+    },
+    {
+      "no": 19,
+      "name": "ILHAM EKI NUR HAKIM",
+      "nisn": "3106587065",
+      "gender": "L",
+      "jabatan": "Anggota"
+    },
+    {
+      "no": 20,
+      "name": "ILHAM PRABU MUKTAMAR",
+      "nisn": "102010096",
+      "gender": "L",
+      "jabatan": "Anggota"
+    },
+    {
+      "no": 21,
+      "name": "KAMILAH NA'ILATUN NIHLAH",
+      "nisn": "109073961",
+      "gender": "P",
+      "jabatan": "Anggota"
+    },
+    {
+      "no": 22,
+      "name": "KEISHA NISWATUN SUPRIYANTO",
+      "nisn": "112591827",
+      "gender": "P",
+      "jabatan": "Ketua Kelas"
+    },
+    {
+      "no": 23,
+      "name": "KHUSNA AULIYAUSSYIFA",
+      "nisn": "107110024",
+      "gender": "P",
+      "jabatan": "Anggota"
+    },
+    {
+      "no": 24,
+      "name": "MOH NIQOBULLUBAB",
+      "nisn": "3111746654",
+      "gender": "L",
+      "jabatan": "Anggota"
+    },
+    {
+      "no": 25,
+      "name": "MUHAMMAD BALYA SAMAHAT",
+      "nisn": "114021681",
+      "gender": "L",
+      "jabatan": "Anggota"
+    },
+    {
+      "no": 26,
+      "name": "MUHAMMAD HAZIM AL FANANI",
+      "nisn": "115101434",
+      "gender": "L",
+      "jabatan": "Anggota"
+    },
+    {
+      "no": 27,
+      "name": "MUHAMMAD MUFLIH ALMURTADLO",
+      "nisn": "105200137",
+      "gender": "L",
+      "jabatan": "Anggota"
+    },
+    {
+      "no": 28,
+      "name": "MUHAMMAD RAFIF ARYAJUNA",
+      "nisn": "112092406",
+      "gender": "L",
+      "jabatan": "Anggota"
+    },
+    {
+      "no": 29,
+      "name": "MUHAMMAD ZIVAN",
+      "nisn": "113808184",
+      "gender": "L",
+      "jabatan": "Anggota"
+    },
+    {
+      "no": 30,
+      "name": "NABILA TSABITA PUTRI MUSTOFA",
+      "nisn": "111982065",
+      "gender": "P",
+      "jabatan": "Sekretaris"
+    },
+    {
+      "no": 31,
+      "name": "NASYWA TSABITA HAWA",
+      "nisn": "116407130",
+      "gender": "P",
+      "jabatan": "Anggota"
+    },
+    {
+      "no": 32,
+      "name": "NIA RAHMA IZZATI",
+      "nisn": "112915814",
+      "gender": "P",
+      "jabatan": "Anggota"
+    },
+    {
+      "no": 33,
+      "name": "RAFKA ARYA MAULANA",
+      "nisn": "106767818",
+      "gender": "L",
+      "jabatan": "Anggota"
+    },
+    {
+      "no": 34,
+      "name": "RONALD SANJAYA",
+      "nisn": "106562309",
+      "gender": "L",
+      "jabatan": "Anggota"
+    },
+    {
+      "no": 35,
+      "name": "SYAKIRA KHANSA SANTOSO",
+      "nisn": "104192943",
+      "gender": "P",
+      "jabatan": "Anggota"
+    },
+    {
+      "no": 36,
+      "name": "WILDA AYU SHOLIKHAH",
+      "nisn": "114329572",
+      "gender": "P",
+      "jabatan": "Anggota"
+    },
+    {
+      "no": 37,
+      "name": "ZAHARA NUR AULIA",
+      "nisn": "101472369",
+      "gender": "P",
+      "jabatan": "Anggota"
+    },
+    {
+      "no": 38,
+      "name": "ZAHIRA PUTRI FITRIA KHOIRUNNISA",
+      "nisn": "113060981",
+      "gender": "P",
+      "jabatan": "Anggota"
+    }
+  ],
+  "kas": [
+    {
+      "id": 1,
+      "tanggal": "2026-10-15",
+      "tipe": "kas_masuk",
+      "siswa": "AHMAD AJRIEL IRFAN",
+      "jumlah": 20000,
+      "keterangan": "Iuran Kas Bulan Oktober",
+      "statusApproval": "approved"
+    },
+    {
+      "id": 2,
+      "tanggal": "2026-10-15",
+      "tipe": "kas_masuk",
+      "siswa": "KEISHA NISWATUN SUPRIYANTO",
+      "jumlah": 20000,
+      "keterangan": "Iuran Kas Bulan Oktober",
+      "statusApproval": "approved"
+    },
+    {
+      "id": 3,
+      "tanggal": "2026-10-18",
+      "tipe": "kas_keluar",
+      "siswa": "-",
+      "jumlah": 35000,
+      "keterangan": "Beli spidol whiteboard & penghapus",
+      "statusApproval": "approved"
+    },
+    {
+      "id": 4,
+      "tanggal": "2026-10-22",
+      "tipe": "tabungan_masuk",
+      "siswa": "BRIAN ARVIN YUDA ALBAIHAQI",
+      "jumlah": 50000,
+      "keterangan": "Tabungan Pribadi Minggu ke-3",
+      "statusApproval": "approved"
+    },
+    {
+      "id": 5,
+      "tanggal": "2026-11-02",
+      "tipe": "kas_masuk",
+      "siswa": "HANNA AULIA",
+      "jumlah": 20000,
+      "keterangan": "Iuran Kas Bulan November",
+      "statusApproval": "approved"
+    },
+    {
+      "id": 6,
+      "tanggal": "2026-11-05",
+      "tipe": "kas_keluar",
+      "siswa": "-",
+      "jumlah": 15000,
+      "keterangan": "Fotokopi lembar latihan UTBK",
+      "statusApproval": "approved"
+    },
+    {
+      "id": 7,
+      "tanggal": "2026-11-06",
+      "tipe": "tabungan_masuk",
+      "siswa": "AHMAD AJRIEL IRFAN",
+      "jumlah": 75000,
+      "keterangan": "Setoran Tabungan Semester",
+      "statusApproval": "approved"
+    }
+  ],
+  "poin": [
+    {
+      "id": 1,
+      "tanggal": "2026-10-28",
+      "siswa": "AHMAD FAIRUZ SYIHAB ARAFIF",
+      "kategori": "pelanggaran",
+      "jenis": "Tidak melaksanakan piket pagi",
+      "poin": 10,
+      "pelapor": "Ketua Kelas",
+      "status": "selesai",
+      "tindakan": "Piket pengganti 2 hari berturut-turut"
+    },
+    {
+      "id": 2,
+      "tanggal": "2026-11-01",
+      "siswa": "BRIAN ARVIN YUDA ALBAIHAQI",
+      "kategori": "pelanggaran",
+      "jenis": "Terlambat masuk jam pelajaran pertama",
+      "poin": 5,
+      "pelapor": "Sekretaris",
+      "status": "selesai",
+      "tindakan": "Teguran lisan & resume materi"
+    },
+    {
+      "id": 3,
+      "tanggal": "2026-11-04",
+      "siswa": "MOH NIQOBULLUBAB",
+      "kategori": "pelanggaran",
+      "jenis": "Meninggalkan sampah di laci meja",
+      "poin": 5,
+      "pelapor": "Seksi Kebersihan",
+      "status": "selesai",
+      "tindakan": "Membersihkan area kelas"
+    },
+    {
+      "id": 4,
+      "tanggal": "2026-11-08",
+      "siswa": "MUHAMMAD HAZIM AL FANANI",
+      "kategori": "pelanggaran",
+      "jenis": "Atribut seragam tidak lengkap (dasi & sabuk)",
+      "poin": 5,
+      "pelapor": "Wali Kelas",
+      "status": "ditindaklanjuti",
+      "tindakan": "Peringatan wali kelas & orang tua"
+    },
+    {
+      "id": 5,
+      "tanggal": "2026-11-09",
+      "siswa": "KEISHA NISWATUN SUPRIYANTO",
+      "kategori": "prestasi",
+      "jenis": "Juara 1 Olimpiade Sains Informatika Tingkat Kota",
+      "poin": 25,
+      "pelapor": "Wali Kelas",
+      "status": "selesai",
+      "tindakan": "Apresiasi & Piagam Penghargaan Sekolah"
+    }
+  ],
+  "tugas": [
+    {
+      "id": 1,
+      "mapel": "Informatika & Pemrograman",
+      "guru": "Ms. Wilda Ulfiyanti, S.Kom",
+      "judul": "Proyek Algoritma Sorting Python",
+      "deskripsi": "Buatlah simulasi Bubble Sort dan Merge Sort dengan antarmuka visual sederhana di Google Colab.",
+      "deadline": "2026-11-15T23:59",
+      "poinMaksimal": 100,
+      "status": "dinilai",
+      "nilai": 95,
+      "catatanSiswa": "https://colab.research.google.com/drive/sorting-xe4 — Sudah di-deploy lengkap dengan grafik kompleksitas.",
+      "catatanGuru": "Sangat rapi dan analisis kompleksitas O(n log n) sangat tepat!",
+      "submittedBy": "AHMAD AJRIEL IRFAN",
+      "submittedAt": "2026-11-08 19:30"
+    },
+    {
+      "id": 2,
+      "mapel": "Fisika Bilingual",
+      "guru": "Bpk. Ir. Bambang, M.Sc",
+      "judul": "Laporan Praktikum Gerak Parabola",
+      "deskripsi": "Analisis video percobaan gerak peluru dengan software Tracker dan buat grafik kecepatan vs waktu.",
+      "deadline": "2026-11-18T18:00",
+      "poinMaksimal": 100,
+      "status": "terkumpul",
+      "nilai": null,
+      "catatanSiswa": "https://drive.google.com/file/d/fisika-parabola — File PDF laporan dan data tracker terlampir.",
+      "catatanGuru": "",
+      "submittedBy": "AHMAD AJRIEL IRFAN",
+      "submittedAt": "2026-11-09 14:15"
+    },
+    {
+      "id": 3,
+      "mapel": "Bahasa Inggris / Cambridge",
+      "guru": "Mr. John Miller, B.Ed",
+      "judul": "Opinion Essay: AI Ethics in High School",
+      "deskripsi": "Write a 400-word argumentative essay exploring the positive and negative implications of generative AI in modern classrooms.",
+      "deadline": "2026-11-20T23:59",
+      "poinMaksimal": 100,
+      "status": "belum_kumpul",
+      "nilai": null,
+      "catatanSiswa": "",
+      "catatanGuru": "",
+      "submittedBy": "",
+      "submittedAt": null
+    }
+  ]
+}

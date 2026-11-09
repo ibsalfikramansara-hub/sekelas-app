@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Poin Pelanggaran & Kedisiplinan - Kelas X.E-4</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { font-family: 'Plus Jakarta Sans', system-ui, sans-serif; }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen p-4 md:p-8">
+    <div class="max-w-5xl mx-auto">
+        <header class="mb-6 flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
+            <div>
+                <span class="text-xs font-bold uppercase tracking-wider text-rose-600 bg-rose-50 px-2.5 py-1 rounded-full">Kedisiplinan & Sikap</span>
+                <h1 class="text-2xl font-extrabold text-slate-900 mt-2">Buku Catatan Poin Pelanggaran Siswa</h1>
+                <p class="text-slate-500 text-sm">Monitoring ketertiban, kedisiplinan piket, dan pembinaan kelas X.E-4.</p>
+            </div>
+            <a href="frontend/index.html#/poin" class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-slate-900 text-white text-sm font-semibold hover:bg-slate-800 transition">
+                Buka di Aplikasi SEKELAS &rarr;
+            </a>
+        </header>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+            <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm">
+                <div class="text-xs font-semibold text-slate-500 uppercase">Total Kasus Tercatat</div>
+                <div class="text-2xl font-bold text-slate-900 mt-1" id="stat-total">4 Kasus</div>
+            </div>
+            <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm">
+                <div class="text-xs font-semibold text-slate-500 uppercase">Dalam Tindak Lanjut</div>
+                <div class="text-2xl font-bold text-amber-600 mt-1" id="stat-proses">1 Kasus</div>
+            </div>
+            <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm">
+                <div class="text-xs font-semibold text-slate-500 uppercase">Selesai Dibina</div>
+                <div class="text-2xl font-bold text-emerald-600 mt-1" id="stat-selesai">3 Kasus</div>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
+            <div class="p-5 border-b border-slate-100 flex items-center justify-between">
+                <h2 class="text-base font-bold text-slate-900">Riwayat Pelanggaran & Tindak Lanjut</h2>
+                <span class="text-xs text-slate-400">Sinkron dengan Wali Kelas</span>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="w-full text-left text-sm">
+                    <thead class="bg-slate-50 text-slate-500 text-xs uppercase border-b border-slate-100">
+                        <tr>
+                            <th class="px-5 py-3">Tanggal</th>
+                            <th class="px-5 py-3">Nama Siswa</th>
+                            <th class="px-5 py-3">Jenis Pelanggaran</th>
+                            <th class="px-5 py-3">Poin Minus</th>
+                            <th class="px-5 py-3">Pelapor</th>
+                            <th class="px-5 py-3">Status</th>
+                            <th class="px-5 py-3">Tindakan / Pembinaan</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-100">
+                        <tr class="hover:bg-slate-50/50">
+                            <td class="px-5 py-3.5 text-slate-500">28 Okt 2026</td>
+                            <td class="px-5 py-3.5 font-semibold text-slate-900">Ahmad Fairuz</td>
+                            <td class="px-5 py-3.5">Tidak melaksanakan piket pagi</td>
+                            <td class="px-5 py-3.5 font-bold text-rose-600">-10</td>
+                            <td class="px-5 py-3.5 text-slate-600">Ketua Kelas</td>
+                            <td class="px-5 py-3.5"><span class="px-2.5 py-1 text-xs rounded-full bg-emerald-50 text-emerald-700 font-semibold">Selesai</span></td>
+                            <td class="px-5 py-3.5 text-slate-600 text-xs">Piket pengganti 2 hari berturut-turut</td>
+                        </tr>
+                        <tr class="hover:bg-slate-50/50">
+                            <td class="px-5 py-3.5 text-slate-500">01 Nov 2026</td>
+                            <td class="px-5 py-3.5 font-semibold text-slate-900">Brian Arvin</td>
+                            <td class="px-5 py-3.5">Terlambat masuk jam pelajaran pertama</td>
+                            <td class="px-5 py-3.5 font-bold text-rose-600">-5</td>
+                            <td class="px-5 py-3.5 text-slate-600">Sekretaris</td>
+                            <td class="px-5 py-3.5"><span class="px-2.5 py-1 text-xs rounded-full bg-emerald-50 text-emerald-700 font-semibold">Selesai</span></td>
+                            <td class="px-5 py-3.5 text-slate-600 text-xs">Teguran lisan & resume materi</td>
+                        </tr>
+                        <tr class="hover:bg-slate-50/50">
+                            <td class="px-5 py-3.5 text-slate-500">04 Nov 2026</td>
+                            <td class="px-5 py-3.5 font-semibold text-slate-900">Moh Niqobullubab</td>
+                            <td class="px-5 py-3.5">Meninggalkan sampah di laci meja</td>
+                            <td class="px-5 py-3.5 font-bold text-rose-600">-5</td>
+                            <td class="px-5 py-3.5 text-slate-600">Seksi Kebersihan</td>
+                            <td class="px-5 py-3.5"><span class="px-2.5 py-1 text-xs rounded-full bg-emerald-50 text-emerald-700 font-semibold">Selesai</span></td>
+                            <td class="px-5 py-3.5 text-slate-600 text-xs">Membersihkan area kelas</td>
+                        </tr>
+                        <tr class="hover:bg-slate-50/50">
+                            <td class="px-5 py-3.5 text-slate-500">08 Nov 2026</td>
+                            <td class="px-5 py-3.5 font-semibold text-slate-900">Muhammad Hazim</td>
+                            <td class="px-5 py-3.5">Atribut seragam tidak lengkap</td>
+                            <td class="px-5 py-3.5 font-bold text-rose-600">-5</td>
+                            <td class="px-5 py-3.5 text-slate-600">Wali Kelas</td>
+                            <td class="px-5 py-3.5"><span class="px-2.5 py-1 text-xs rounded-full bg-amber-50 text-amber-700 font-semibold">Ditindaklanjuti</span></td>
+                            <td class="px-5 py-3.5 text-slate-600 text-xs">Peringatan wali kelas & orang tua</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

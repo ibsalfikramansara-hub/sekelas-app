@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Jadwal Piket</title>
+  <style>
+:root {
+  /* Tema indigo, sesuai dashboard kelas */
+  --latar: #f3f4f6;
+  --putih: #ffffff;
+  --teks: #1f2937;
+  --teks-lembut: #6b7280;
+  --garis: #e5e7eb;
+  --primer: #4f46e5;
+  --primer-gelap: #312e81;
+  --primer-muda: #eef2ff;
+  --primer-cincin: rgba(79, 70, 229, 0.3);
+  --bar-kosong: #e5e7eb;
+  --aksen: #d67d5a;
+  --aksen-muda: #fbece5;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--latar);
+  color: var(--teks);
+  /* Mau ganti font? Ubah baris ini saja. */
+  font-family: "Segoe UI", system-ui, -apple-system, Roboto, Arial, sans-serif;
+  line-height: 1.5;
+}
+
+.halaman {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 36px 16px 48px;
+}
+
+/* Judul di tengah */
+.kepala {
+  text-align: center;
+  margin-bottom: 28px;
+}
+
+.kepala h1 {
+  margin: 0;
+  font-size: 2rem;
+  font-weight: 700;
+}
+
+.nama-kelas {
+  margin: 4px 0 0;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--primer);
+}
+
+.tanggal-hari-ini {
+  margin: 2px 0 0;
+  color: var(--teks-lembut);
+}
+
+/* Tombol masuk sebagai perwakilan */
+.tombol-masuk {
+  margin-top: 12px;
+  padding: 8px 16px;
+  border: 1px solid var(--garis);
+  border-radius: 999px;
+  background: var(--putih);
+  color: var(--teks);
+  font: inherit;
+  font-size: 0.88rem;
+  cursor: pointer;
+}
+
+.tombol-masuk:hover {
+  background: var(--primer-muda);
+}
+
+.tombol-masuk.aktif {
+  background: var(--primer);
+  border-color: var(--primer);
+  color: var(--putih);
+}
+
+/* Checkbox terkunci (belum masuk sebagai perwakilan) */
+.tabel-hari input[type="checkbox"]:disabled {
+  cursor: not-allowed;
+  opacity: 0.45;
+}
+
+.tabel-hari label:has(input:disabled) {
+  cursor: not-allowed;
+}
+
+#tombol-reset:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+#tombol-reset:disabled:hover {
+  background: var(--putih);
+}
+
+/* Susunan tabel: 2 kolom berdampingan */
+.grid-piket {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+  align-items: start;
+}
+
+/* Kartu pembungkus tiap tabel */
+.kartu {
+  border: 1px solid var(--garis);
+  border-radius: 12px;
+  overflow: hidden;
+  background: var(--putih);
+  box-shadow: 0 2px 8px rgba(79, 70, 229, 0.12);
+}
+
+.kartu.hari-ini {
+  box-shadow: 0 0 0 4px var(--primer-cincin);
+}
+
+.tabel-hari {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+/* Judul hari */
+.tabel-hari thead th {
+  padding: 12px 16px;
+  background: var(--primer);
+  color: var(--putih);
+  text-align: center;
+}
+
+.nama-hari {
+  display: block;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-size: 1.1rem;
+  font-weight: 700;
+}
+
+.tanggal-hari {
+  display: block;
+  font-size: 0.8rem;
+  font-weight: 400;
+  opacity: 0.9;
+}
+
+/* Baris nama: nama di kiri, checklist di kanan */
+.tabel-hari tbody td {
+  padding: 0;
+  border-bottom: 1px solid var(--garis);
+}
+
+.tabel-hari label {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 11px 16px;
+  cursor: pointer;
+}
+
+.tabel-hari label:hover {
+  background: var(--primer-muda);
+}
+
+.tabel-hari label span {
+  flex: 1;
+}
+
+.tabel-hari input[type="checkbox"] {
+  order: 2;
+  width: 22px;
+  height: 22px;
+  accent-color: var(--primer);
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.tabel-hari input[type="checkbox"]:focus-visible {
+  outline: 3px solid var(--primer);
+  outline-offset: 2px;
+}
+
+.tabel-hari tr.selesai td {
+  background: var(--primer-muda);
+}
+
+.tabel-hari tr.selesai span {
+  color: var(--teks-lembut);
+  text-decoration: line-through;
+}
+
+/* Status + progress bar */
+.tabel-hari tfoot td {
+  padding: 12px 16px 14px;
+}
+
+.teks-status {
+  display: block;
+  margin-bottom: 8px;
+  text-align: center;
+  font-size: 0.88rem;
+  color: var(--teks-lembut);
+}
+
+.teks-status.lengkap {
+  color: var(--primer);
+  font-weight: 600;
+}
+
+.bar {
+  height: 8px;
+  border-radius: 999px;
+  background: var(--bar-kosong);
+  overflow: hidden;
+}
+
+.isi-bar {
+  height: 100%;
+  width: 0;
+  border-radius: 999px;
+  background: var(--primer);
+  transition: width 0.25s ease;
+}
+
+/* Kartu tugas piket (paling bawah, satu kolom penuh) */
+.kartu-tugas {
+  margin-top: 20px;
+}
+
+.judul-tugas {
+  margin: 0;
+  padding: 9px 16px;
+  background: var(--primer);
+  color: var(--putih);
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-size: 0.95rem;
+  font-weight: 700;
+}
+
+.daftar-tugas {
+  list-style: none;
+  margin: 0;
+  padding: 8px 16px;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0 20px;
+}
+
+.daftar-tugas li {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 4px 0;
+  font-size: 0.92rem;
+}
+
+.ikon-tugas {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: var(--primer-muda);
+  font-size: 0.8rem;
+}
+
+.catatan-sabtu {
+  margin: 4px 16px 12px;
+  padding: 8px 12px;
+  background: var(--aksen-muda);
+  border-left: 4px solid var(--aksen);
+  border-radius: 8px;
+  font-size: 0.82rem;
+}
+
+@media (min-width: 560px) {
+  .daftar-tugas {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* Efek saat semua petugas sudah piket */
+.kartu.rayakan {
+  animation: muncul 0.5s ease;
+}
+
+@keyframes muncul {
+  0%   { transform: scale(1); }
+  40%  { transform: scale(1.04); }
+  100% { transform: scale(1); }
+}
+
+/* Bagian bawah */
+.kaki {
+  margin-top: 28px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+  justify-content: space-between;
+  color: var(--teks-lembut);
+  font-size: 0.9rem;
+}
+
+.kaki p {
+  margin: 0;
+}
+
+#tombol-reset {
+  padding: 8px 14px;
+  border: 1px solid var(--garis);
+  border-radius: 8px;
+  background: var(--putih);
+  color: var(--teks);
+  font: inherit;
+  cursor: pointer;
+}
+
+#tombol-reset:hover {
+  background: var(--primer-muda);
+}
+
+/* HP: satu kolom */
+@media (max-width: 600px) {
+  .grid-piket {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .isi-bar {
+    transition: none;
+  }
+
+  .kartu.rayakan {
+    animation: none;
+  }
+}
+
+  </style>
+</head>
+<body>
+  <main class="halaman">
+    <header class="kepala">
+      <h1>Jadwal piket</h1>
+      <p id="nama-kelas" class="nama-kelas"></p>
+      <p id="tanggal-hari-ini" class="tanggal-hari-ini"></p>
+    </header>
+
+    <section id="grid-piket" class="grid-piket"></section>
+
+    <section class="kartu kartu-tugas" aria-labelledby="judul-tugas">
+      <h2 id="judul-tugas" class="judul-tugas">Tugas piket</h2>
+      <ul id="daftar-tugas" class="daftar-tugas"></ul>
+      <p id="catatan-sabtu" class="catatan-sabtu"></p>
+    </section>
+
+    <footer class="kaki">
+      <p>Halaman ini hanya untuk melihat. Yang bisa mencentang hanya perwakilan piket.</p>
+    </footer>
+  </main>
+  <script>
+// ===== DATA BERSAMA =====
+// File ini dipakai oleh index.html (halaman perwakilan) dan lihat.html (halaman lihat saja).
+// Cukup ubah di sini, otomatis ikut berubah di kedua halaman.
+
+const NAMA_KELAS = "Kelas X.E-4";
+
+// Jumlah nama per hari boleh berbeda-beda.
+const jadwalPiket = {
+  Senin:  ["Ahmad Ajriel Irfan", "Ahmad Fairuz Syihab Arafif", "Ainul Futichatur Rizqoh", "Defaaiqsyah Hibatullah Abraar", "Hanna Aulia", "Ilham Prabu Muktamar" , "Wilda Ayu Sholikhah"],
+  Selasa: ["Hisyam Muhammad Shofa", "Kamila Na'ilatun Nihlah", "Keisha Niswatun Supriyanto", "Muhammad Hazim Al Fanani", "Muhammad Zivan", "Rafka Arya Maulana" , "Zahira Putri Fitriya Khoirunnisa"],
+  Rabu:   ["Faiq Aulia Amali", "Fitri Amalia Hidayah", "Khusna Auliyaussyifa", "Moh. Niqobullubab", "Muhammad Balya Samahat", "Nia Rahma Izzati"],
+  Kamis:  ["Andhika Adi Saputra", "Aqila Mumtaz El Hady", "Aurelia Namira Ramaniya", "Difa Fauqi Ais Fadilla", "Muhammad Muflih Almurtadlo", "Nasywa Tsabita Hawa"],
+  Jumat:  ["Aulia Zahwa Izzatunnisa", "Azzam Yusuf Mansur", "Farhatul Atikah", "Hajira Nada Salsabila", "Muhammad Rafif Aryajuna", "Ronald Sanjaya"],
+  Sabtu:  ["Brian Arvin Yuda", "Faisal Fathin Bayhaqi", "Ilham Eki Nur Hakim", "Nabila Tsabita Putri Mustofa", "Syakira Khansa Santoso", "Zahara Nur Aulia"]
+};
+
+// Daftar tugas piket (tampil di bagian paling bawah). Ganti sesuai tugas kelas kalian.
+const tugasPiket = [
+  { ikon: "📒", teks: "Mengambil dan mengembalikan jurnal" },
+  { ikon: "🍱", teks: "Mengambil dan mengembalikan MBG" },
+  { ikon: "📚", teks: "Menata meja guru" },
+  { ikon: "🧽", teks: "Menghapus papan tulis" },
+  { ikon: "✨", teks: "Merapikan kelas jika masih kurang rapi" },
+  { ikon: "🗑️", teks: "Membuang sampah di dalam kelas setiap pagi dan saat pulang sekolah" },
+  { ikon: "🧹", teks: "Menyedot debu" }
+];
+
+// Catatan khusus hari Sabtu (karena hari Sabtu tidak ada MBG).
+const catatanSabtu = "Pada hari Sabtu tidak ada pengambilan dan pengembalian MBG, sehingga petugas piket Sabtu ikut mengambil dan mengembalikan MBG pada hari lain.";
+
+// Urutan hari sesuai getDay() di JavaScript (0 = Minggu, 1 = Senin, dst.)
+const namaHariJS = ["Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"];
+// Halaman ini hanya untuk melihat. Semua data (nama kelas, jadwal, tugas)
+// diambil dari data.js supaya tidak perlu ditulis dua kali.
+//
+// Kalau butuh ubah nama-nama piket atau tugas piket, ubah di data.js saja,
+// perubahannya otomatis ikut tampil di halaman ini dan di halaman perwakilan.
+
+// ===== 1. TANGGAL =====
+function tanggalSeninMingguIni() {
+  const sekarang = new Date();
+  const selisih = (sekarang.getDay() + 6) % 7; // Senin = 0
+  return new Date(sekarang.getFullYear(), sekarang.getMonth(), sekarang.getDate() - selisih);
+}
+
+function formatKunci(tanggal) {
+  const bulan = String(tanggal.getMonth() + 1).padStart(2, "0");
+  const hari = String(tanggal.getDate()).padStart(2, "0");
+  return tanggal.getFullYear() + "-" + bulan + "-" + hari;
+}
+
+// ===== 2. BACA CENTANG (hanya baca, tidak bisa mengubah) =====
+// Catatan: karena centang disimpan di browser masing-masing perangkat,
+// halaman lihat ini hanya akan menampilkan centang yang tersimpan di
+// browser/perangkat yang sama dengan yang dipakai perwakilan piket.
+const kunciPenyimpanan = "piket-" + formatKunci(tanggalSeninMingguIni());
+
+function bacaCentang() {
+  try {
+    const data = localStorage.getItem(kunciPenyimpanan);
+    return data ? JSON.parse(data) : {};
+  } catch (galat) {
+    return {};
+  }
+}
+
+const centang = bacaCentang();
+
+// ===== 3. MEMBUAT TABEL (satu tabel per hari, checkbox selalu terkunci) =====
+const gridPiket = document.getElementById("grid-piket");
+const hariIni = namaHariJS[new Date().getDay()];
+const senin = tanggalSeninMingguIni();
+
+function buatTabel() {
+  gridPiket.innerHTML = "";
+
+  Object.keys(jadwalPiket).forEach(function (hari, indeksHari) {
+    const kartu = document.createElement("div");
+    kartu.className = "kartu";
+    if (hari === hariIni) kartu.classList.add("hari-ini");
+
+    const tabel = document.createElement("table");
+    tabel.className = "tabel-hari";
+
+    // Judul: nama hari (huruf besar diatur di CSS) + tanggal
+    const tanggal = new Date(senin.getFullYear(), senin.getMonth(), senin.getDate() + indeksHari);
+    const kepala = document.createElement("thead");
+    const barisKepala = document.createElement("tr");
+    const judul = document.createElement("th");
+    judul.scope = "col";
+
+    const teksHari = document.createElement("span");
+    teksHari.className = "nama-hari";
+    teksHari.textContent = hari;
+
+    const teksTanggal = document.createElement("span");
+    teksTanggal.className = "tanggal-hari";
+    teksTanggal.textContent = tanggal.toLocaleDateString("id-ID", { day: "numeric", month: "long" });
+
+    judul.appendChild(teksHari);
+    judul.appendChild(teksTanggal);
+    barisKepala.appendChild(judul);
+    kepala.appendChild(barisKepala);
+
+    // Daftar nama + centang (selalu terkunci, hanya untuk dilihat)
+    const isi = document.createElement("tbody");
+    jadwalPiket[hari].forEach(function (nama, urutan) {
+      const kunci = hari + "-" + urutan;
+      const sudahPiket = Boolean(centang[kunci]);
+
+      const baris = document.createElement("tr");
+      if (sudahPiket) baris.classList.add("selesai");
+
+      const sel = document.createElement("td");
+      const label = document.createElement("label");
+
+      const kotak = document.createElement("input");
+      kotak.type = "checkbox";
+      kotak.checked = sudahPiket;
+      kotak.disabled = true;
+
+      const teks = document.createElement("span");
+      teks.textContent = nama;
+
+      label.appendChild(kotak);
+      label.appendChild(teks);
+      sel.appendChild(label);
+      baris.appendChild(sel);
+      isi.appendChild(baris);
+    });
+
+    // Status + progress bar di bawah tabel
+    const kaki = document.createElement("tfoot");
+    const barisKaki = document.createElement("tr");
+    const sel = document.createElement("td");
+
+    const teksStatus = document.createElement("span");
+    teksStatus.className = "teks-status";
+
+    const total = jadwalPiket[hari].length;
+    let selesai = 0;
+    for (let i = 0; i < total; i++) {
+      if (centang[hari + "-" + i]) selesai++;
+    }
+
+    if (selesai === total) {
+      teksStatus.textContent = "🎉 Semua petugas sudah piket";
+      teksStatus.classList.add("lengkap");
+    } else {
+      teksStatus.textContent = selesai + " dari " + total + " petugas sudah piket";
+    }
+
+    const bar = document.createElement("div");
+    bar.className = "bar";
+    const isiBar = document.createElement("div");
+    isiBar.className = "isi-bar";
+    isiBar.style.width = (total ? (selesai / total) * 100 : 0) + "%";
+    bar.appendChild(isiBar);
+
+    sel.appendChild(teksStatus);
+    sel.appendChild(bar);
+    barisKaki.appendChild(sel);
+    kaki.appendChild(barisKaki);
+
+    tabel.appendChild(kepala);
+    tabel.appendChild(isi);
+    tabel.appendChild(kaki);
+    kartu.appendChild(tabel);
+    gridPiket.appendChild(kartu);
+  });
+}
+
+// ===== 4. JUDUL HALAMAN =====
+function tampilkanJudul() {
+  document.getElementById("nama-kelas").textContent = NAMA_KELAS;
+  document.getElementById("tanggal-hari-ini").textContent = new Date().toLocaleDateString("id-ID", {
+    weekday: "long",
+    day: "numeric",
+    month: "long",
+    year: "numeric"
+  });
+}
+
+// ===== 5. DAFTAR TUGAS PIKET =====
+function tampilkanTugas() {
+  const daftar = document.getElementById("daftar-tugas");
+  daftar.innerHTML = "";
+  tugasPiket.forEach(function (tugas) {
+    const item = document.createElement("li");
+
+    const ikon = document.createElement("span");
+    ikon.className = "ikon-tugas";
+    ikon.setAttribute("aria-hidden", "true");
+    ikon.textContent = tugas.ikon;
+
+    const teks = document.createElement("span");
+    teks.textContent = tugas.teks;
+
+    item.appendChild(ikon);
+    item.appendChild(teks);
+    daftar.appendChild(item);
+  });
+
+  const catatan = document.getElementById("catatan-sabtu");
+  const judulCatatan = document.createElement("strong");
+  judulCatatan.textContent = "Khusus Sabtu: ";
+  catatan.appendChild(judulCatatan);
+  catatan.appendChild(document.createTextNode(catatanSabtu));
+}
+
+// ===== 6. JALANKAN =====
+tampilkanJudul();
+buatTabel();
+tampilkanTugas();
+
+  </script>
+</body>
+</html>

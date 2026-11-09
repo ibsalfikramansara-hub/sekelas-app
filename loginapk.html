@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome - Login</title>
+    <style>
+        /* Mengatur dasar halaman dan latar belakang Navy */
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #007d0f; /* hijau khas sekolah madrasah */
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #bfbfb7;
+        }
+
+        /* Container utama teks dan form */
+        .main-container {
+            text-align: center;
+            width: 100%;
+            max-width: 400px;
+            padding: 20px;
+        }
+
+        /* Desain teks judul atas */
+        h1 {
+            font-size: 3rem;
+            margin: 0 0 10px 0;
+            letter-spacing: 2px;
+            font-weight: bold;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Desain teks sub-judul */
+        .subtitle {
+            font-size: 1.1rem;
+            margin-bottom: 30px;
+            color: #E1E1E1;
+        }
+
+        /* Kotak login dengan Outline Merah */
+        .login-box {
+            background-color: rgba(0, 125, 40, 0.6); /* Transparan navy */
+            padding: 40px 30px;
+            border-radius: 8px;
+            border: 3px solid #cfcc14; /* Merah khas bendera U.K */
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(5px);
+        }
+
+        /* Pengaturan kelompok input */
+        .input-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        /* Label input */
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        /* Desain kolom text field */
+        input[type="text"],
+        input[type="password"] {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #FFFFFF;
+            border-radius: 4px;
+            background-color: rgba(255, 255, 255, 0.1);
+            color: #FFFFFF;
+            font-size: 1rem;
+            box-sizing: border-box;
+            transition: all 0.3s ease;
+        }
+
+        /* Efek saat kolom input diklik/fokus */
+        input[type="text"]:focus,
+        input[type="password"]:focus {
+            outline: none;
+            border-color: #bccf14;
+            background-color: rgba(33, 232, 26, 0.2);
+            box-shadow: 0 0 8px rgba(248, 245, 246, 0.926);
+        }
+
+        /* Desain tombol Login */
+        .btn-login {
+            width: 100%;
+            padding: 12px;
+            background-color: #14cf17; /* Tombol Merah */
+            border: none;
+            border-radius: 4px;
+            color: #FFFFFF;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            margin-top: 10px;
+        }
+
+        /* Efek saat tombol login diarahkan kursor */
+        .btn-login:hover {
+            background-color: #238034;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="main-container">
+        <!-- Tulisan di bagian atas -->
+        <h1>WELCOME</h1>
+        <div class="subtitle">masukkan username dan password anda</div>
+
+        <!-- Kotak Form Login -->
+        <div class="login-box">
+            <form action="#">
+                <div class="input-group">
+                    <label for="username">Username</label>
+                    <input type="Username" id="username" name="username" placeholder="Ketik username..." required>
+                </div>
+                
+                <div class="input-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="Absen 39" placeholder="Ketik password..." required>
+                </div>
+
+                <button type="submit" class="btn-login">LOGIN</button>
+            </form>
+        </div>
+    </div>
+
+</body>
+</html>

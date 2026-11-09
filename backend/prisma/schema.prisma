@@ -1,0 +1,194 @@
+// Prisma Schema — SEKELAS Class App
+// Digunakan bersama dengan database/schema.sql. Support PostgreSQL & MySQL.
+// Untuk MySQL ubah provider menjadi "mysql".
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Kelas {
+  id            Int      @id @default(autoincrement())
+  namaKelas     String   @unique @map("nama_kelas")
+  waliKelasId   Int?     @map("wali_kelas_id")
+  createdAt     DateTime @default(now()) @map("created_at")
+  updatedAt     DateTime @updatedAt @map("updated_at")
+
+  waliKelas     User?    @relation("KelasWali", fields: [waliKelasId], references: [id])
+  users         User[]
+  jadwalPelajaran JadwalPelajaran[]
+  jadwalPiket   JadwalPiket[]
+  pelanggaran   Pelanggaran[]
+  transaksi     TransaksiKeuangan[]
+  tugas         Tugas[]
+
+  @@map("kelas")
+}
+
+model User {
+  id                Int       @id @default(autoincrement())
+  nis               String?   @unique @map("nis")
+  nip               String?   @unique @map("nip")
+  username          String    @unique @map("username")
+  passwordHash      String    @map("password_hash")
+  fullName          String    @map("full_name")
+  email             String?   @unique @map("email")
+  role              String    @default("siswa") @map("role") // siswa | wali_kelas | guru_mapel | orang_tua | admin
+  jabatanPengurus   String    @default("anggota") @map("jabatan_pengurus") // anggota | ketua_kelas | sekretaris | bendahara
+  kelasId           Int?      @map("kelas_id")
+  parentOfId        Int?      @unique @map("parent_of_id")
+  avatarUrl         String?   @map("avatar_url")
+  isActive          Boolean   @default(true) @map("is_active")
+  createdAt         DateTime  @default(now()) @map("created_at")
+  updatedAt         DateTime  @updatedAt @map("updated_at")
+
+  kelas             Kelas?    @relation(fields: [kelasId], references: [id])
+  waliKelasOf       Kelas?    @relation("KelasWali", fields: [waliKelasId], references: [id])
+  anakOrangTua      User?     @relation("OrangTuaAnak", fields: [parentOfId], references: [id])
+  pelanggaranDiterima Pelanggaran[] @relation("PelanggaranSiswa")
+  pelanggaranPelapor Pelanggaran[] @relation("PelanggaranPelapor")
+  transaksiBendahara TransaksiKeuangan[] @relation("TransaksiBendahara")
+  transaksiSiswa    TransaksiKeuangan[] @relation("TransaksiSiswa")
+  tugasDibuat       Tugas[]   @relation("TugasGuru")
+  pengumpulan       PengumpulanTugas[]
+  notifikasi        Notifikasi[]
+  dinilaiOleh       PengumpulanTugas[] @relation("TugasDinilaiOleh")
+
+  @@map("users")
+}
+
+model JadwalPelajaran {
+  id            Int      @id @default(autoincrement())
+  kelasId       Int      @map("kelas_id")
+  hari          String   @map("hari")
+  jamKe         Int      @map("jam_ke")
+  jamMulai      DateTime @map("jam_mulai")
+  jamSelesai    DateTime @map("jam_selesai")
+  mataPelajaran String   @map("mata_pelajaran")
+  guruId        Int?     @map("guru_id")
+  createdAt     DateTime @default(now()) @map("created_at")
+
+  kelas   Kelas  @relation(fields: [kelasId], references: [id])
+  guru    User?  @relation(fields: [guruId], references: [id])
+
+  @@map("jadwal_pelajaran")
+}
+
+model JadwalPiket {
+  id        Int      @id @default(autoincrement())
+  kelasId   Int      @map("kelas_id")
+  tanggal   DateTime @map("tanggal")
+  siswaId   Int      @map("siswa_id")
+  status    String   @default("terjadwal") @map("status")
+  catatan   String?  @map("catatan")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  kelas   Kelas @relation(fields: [kelasId], references: [id])
+  siswa   User  @relation(fields: [siswaId], references: [id])
+
+  @@map("jadwal_piket")
+  @@unique([kelasId, tanggal, siswaId])
+}
+
+model Pelanggaran {
+  id                Int      @id @default(autoincrement())
+  siswaId           Int      @map("siswa_id")
+  pelaporId         Int      @map("pelapor_id")
+  kelasId           Int      @map("kelas_id")
+  jenisPelanggaran  String   @map("jenis_pelanggaran")
+  poinMinus         Int      @default(0) @map("poin_minus")
+  tanggal           DateTime @default(now()) @map("tanggal")
+  status            String   @default("tercatat") @map("status")
+  catatanPembinaan  String?  @map("catatan_pembinaan")
+  tindakLanjutOleh  Int?     @map("tindak_lanjut_oleh")
+  selesaiPada       DateTime? @map("selesai_pada")
+  createdAt         DateTime @default(now()) @map("created_at")
+
+  siswa     User @relation("PelanggaranSiswa", fields: [siswaId], references: [id])
+  pelapor   User @relation("PelanggaranPelapor", fields: [pelaporId], references: [id])
+  kelas     Kelas @relation(fields: [kelasId], references: [id])
+
+  @@map("pelanggaran")
+}
+
+model TransaksiKeuangan {
+  id                Int      @id @default(autoincrement())
+  kelasId           Int      @map("kelas_id")
+  siswaId           Int?     @map("siswa_id")
+  bendaharaId       Int      @map("bendahara_id")
+  tipe              String   @map("tipe") // kas_masuk | kas_keluar | tabungan_masuk | tabungan_keluar
+  jumlah            Decimal  @map("jumlah")
+  keterangan        String?  @map("keterangan")
+  tanggal           DateTime @default(now()) @map("tanggal")
+  statusApproval    String   @default("approved") @map("status_approval")
+  disetujuiOleh     Int?     @map("disetujui_oleh")
+  createdAt         DateTime @default(now()) @map("created_at")
+
+  kelas     Kelas    @relation(fields: [kelasId], references: [id])
+  siswa     User?    @relation("TransaksiSiswa", fields: [siswaId], references: [id])
+  bendahara User     @relation("TransaksiBendahara", fields: [bendaharaId], references: [id])
+
+  @@map("transaksi_keuangan")
+}
+
+model Tugas {
+  id               Int      @id @default(autoincrement())
+  guruId           Int      @map("guru_id")
+  kelasId          Int      @map("kelas_id")
+  mataPelajaran    String   @map("mata_pelajaran")
+  judul            String   @map("judul")
+  deskripsi        String?  @map("deskripsi")
+  fileInstruksi    String?  @map("file_instruksi")
+  deadline         DateTime @map("deadline")
+  poinMaksimal     Int      @default(100) @map("poin_maksimal")
+  createdAt        DateTime @default(now()) @map("created_at")
+  updatedAt        DateTime @updatedAt @map("updated_at")
+
+  guru        User   @relation("TugasGuru", fields: [guruId], references: [id])
+  kelas       Kelas  @relation(fields: [kelasId], references: [id])
+  pengumpulan PengumpulanTugas[]
+
+  @@map("tugas")
+}
+
+model PengumpulanTugas {
+  id               Int      @id @default(autoincrement())
+  tugasId          Int      @map("tugas_id")
+  siswaId          Int      @map("siswa_id")
+  filePath         String?  @map("file_path")
+  catatanSiswa     String?  @map("catatan_siswa")
+  nilai            Int?     @map("nilai")
+  status           String   @default("belum_kumpul") @map("status")
+  submittedAt      DateTime? @map("submitted_at")
+  dinilaiOleh      Int?     @map("dinilai_oleh")
+  dinilaiPada      DateTime? @map("dinilai_pada")
+  catatanGuru      String?  @map("catatan_guru")
+  createdAt        DateTime @default(now()) @map("created_at")
+  updatedAt        DateTime @updatedAt @map("updated_at")
+
+  tugas     Tugas    @relation(fields: [tugasId], references: [id])
+  siswa     User     @relation(fields: [siswaId], references: [id])
+  nilaiOleh User?    @relation("TugasDinilaiOleh", fields: [dinilaiOleh], references: [id])
+
+  @@map("pengumpulan_tugas")
+  @@unique([tugasId, siswaId])
+}
+
+model Notifikasi {
+  id        Int      @id @default(autoincrement())
+  userId    Int      @map("user_id")
+  judul     String   @map("judul")
+  pesan     String?  @map("pesan")
+  tipe      String   @default("info") @map("tipe")
+  dibaca    Boolean  @default(false) @map("dibaca")
+  link      String?  @map("link")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  user User @relation(fields: [userId], references: [id])
+
+  @@map("notifikasi")
+}

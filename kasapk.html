@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Sistem Pengelolaan Kas Kelas - versi satu file">
+<title>KasKelas Pro - Sistem Pengelolaan Kas Kelas</title>
+<style>
+:root{--bg:#0b1020;--panel:#121a2e;--panel2:#17223a;--border:#253250;--text:#f3f6ff;--muted:#8e9bb5;--primary:#6c63ff;--primary2:#8b7cff;--green:#31d58a;--red:#ff657a;--yellow:#ffc857;--shadow:0 20px 50px rgba(0,0,0,.28)}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+button,input,select{font:inherit}button{cursor:pointer}
+.app-shell{display:flex;min-height:100vh}
+.sidebar{width:255px;background:#0e1528;border-right:1px solid var(--border);padding:24px 16px;display:flex;flex-direction:column;position:fixed;inset:0 auto 0 0;z-index:10}
+.brand{display:flex;align-items:center;gap:12px;padding:4px 8px 30px}
+.brand-logo{width:42px;height:42px;display:grid;place-items:center;border-radius:12px;background:linear-gradient(135deg,var(--primary),#a855f7);font-size:20px;font-weight:900;box-shadow:0 8px 24px rgba(108,99,255,.28)}
+.brand h1{font-size:18px}.brand span{color:var(--muted);font-size:10px}
+.menu{display:grid;gap:7px}.menu-item{border:0;background:transparent;color:var(--muted);padding:13px 14px;border-radius:10px;text-align:left;display:flex;gap:12px;align-items:center;transition:.2s}
+.menu-item:hover,.menu-item.active{background:rgba(108,99,255,.14);color:white}.menu-item.active{box-shadow:inset 3px 0 0 var(--primary)}
+.menu-item span{width:20px;text-align:center;font-size:17px}.sidebar-bottom{margin-top:auto}
+.status-card{border:1px solid var(--border);background:var(--panel);border-radius:12px;padding:12px;display:flex;gap:10px;align-items:center}
+.status-card strong,.status-card small{display:block}.status-card strong{font-size:12px}.status-card small{color:var(--muted);font-size:10px;margin-top:2px}
+.status-dot{width:9px;height:9px;border-radius:50%;background:var(--green);box-shadow:0 0 12px rgba(49,213,138,.7)}
+.main-content{margin-left:255px;width:calc(100% - 255px);padding:0 34px 40px}
+.topbar{min-height:88px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--border);margin-bottom:28px}
+.eyebrow{color:var(--primary2);font-size:10px;font-weight:800;letter-spacing:1.5px;margin-bottom:4px}.topbar h2{font-size:24px}
+.topbar-actions{display:flex;align-items:center;gap:15px;color:var(--muted);font-size:13px}
+.icon-button{width:38px;height:38px;border:1px solid var(--border);color:white;background:var(--panel);border-radius:10px;font-size:20px}
+.page{display:none}.page.active{display:block}
+.welcome-row,.page-heading{display:flex;align-items:center;justify-content:space-between;gap:20px;margin-bottom:22px}
+.welcome-row h3,.page-heading h3{font-size:24px;margin-bottom:5px}.welcome-row p,.page-heading p{color:var(--muted);font-size:13px}
+.primary-button,.secondary-button,.text-button{border:0;border-radius:9px;padding:11px 16px;font-weight:700}
+.primary-button{color:white;background:linear-gradient(135deg,var(--primary),var(--primary2));box-shadow:0 8px 24px rgba(108,99,255,.2)}
+.secondary-button{color:var(--text);background:var(--panel2);border:1px solid var(--border)}.text-button{background:transparent;color:var(--primary2);padding:5px}
+.primary-button:hover,.secondary-button:hover,.icon-button:hover{transform:translateY(-1px);filter:brightness(1.08)}
+.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:20px}
+.stat-card{background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:18px;display:flex;align-items:center;gap:13px;box-shadow:var(--shadow)}
+.stat-icon{width:42px;height:42px;border-radius:11px;display:grid;place-items:center;background:var(--panel2);color:var(--primary2);font-weight:900}
+.income-card .stat-icon{color:var(--green)}.expense-card .stat-icon{color:var(--red)}
+.stat-card span{color:var(--muted);font-size:11px;display:block;margin-bottom:5px}.stat-card strong{font-size:19px}
+.content-grid{display:grid;grid-template-columns:1.8fr 1fr;gap:18px}
+.panel{background:var(--panel);border:1px solid var(--border);border-radius:14px;box-shadow:var(--shadow);overflow:hidden}
+.panel-header{padding:18px 20px;display:flex;justify-content:space-between;align-items:center}.panel-header h3{font-size:15px}.panel-header p{color:var(--muted);font-size:11px;margin-top:3px}
+.table-wrapper{overflow-x:auto}table{width:100%;border-collapse:collapse;min-width:650px}
+th,td{padding:13px 18px;text-align:left;border-top:1px solid rgba(37,50,80,.65);font-size:12px}th{color:var(--muted);font-size:10px;text-transform:uppercase;letter-spacing:.7px;font-weight:700}td{color:#dce3f3}
+.money-income{color:var(--green);font-weight:800}.money-expense{color:var(--red);font-weight:800}
+.badge{display:inline-flex;border-radius:99px;padding:5px 8px;font-size:10px;font-weight:800}.badge.income{color:var(--green);background:rgba(49,213,138,.1)}.badge.expense{color:var(--red);background:rgba(255,101,122,.1)}
+.quick-panel{padding-bottom:10px}.quick-action{width:calc(100% - 28px);margin:0 14px 10px;padding:14px;display:flex;align-items:center;gap:12px;border:1px solid var(--border);border-radius:11px;background:var(--panel2);color:white;text-align:left}
+.quick-action:hover{border-color:var(--primary)}.quick-action>span{width:34px;height:34px;border-radius:9px;background:rgba(108,99,255,.13);display:grid;place-items:center;color:var(--primary2);font-size:18px}
+.quick-action strong,.quick-action small{display:block}.quick-action strong{font-size:12px}.quick-action small{color:var(--muted);font-size:10px;margin-top:3px}
+.toolbar{padding:15px 18px;display:flex;gap:10px;align-items:center;border-bottom:1px solid var(--border)}
+input,select{width:100%;color:var(--text);background:#0e1629;border:1px solid var(--border);border-radius:9px;padding:11px 12px;outline:none}
+input:focus,select:focus{border-color:var(--primary)}.toolbar input[type=search]{max-width:340px}.toolbar select{max-width:240px}
+.page-heading{margin-bottom:18px}.action-buttons{display:flex;gap:6px}.small-button{border:1px solid var(--border);background:var(--panel2);color:var(--text);padding:6px 8px;border-radius:7px;font-size:10px}.small-button.delete{color:var(--red)}
+.modal-backdrop{position:fixed;inset:0;background:rgba(3,6,15,.72);backdrop-filter:blur(6px);display:none;align-items:center;justify-content:center;padding:20px;z-index:50}.modal-backdrop.open{display:flex}
+.modal{width:min(500px,100%);background:#111a2e;border:1px solid var(--border);border-radius:16px;box-shadow:0 30px 80px rgba(0,0,0,.5);padding:22px}
+.modal-header{display:flex;justify-content:space-between;gap:15px;margin-bottom:20px}.modal-header h3{font-size:18px}.modal-header p{color:var(--muted);font-size:11px;margin-top:3px}
+.close-button{width:32px;height:32px;border:0;border-radius:8px;background:var(--panel2);color:white;font-size:21px}
+form{display:grid;gap:14px}form label{color:#dce3f3;font-size:12px;font-weight:700;display:grid;gap:7px}.optional{color:var(--muted);font-weight:400}
+.form-actions{display:flex;justify-content:flex-end;gap:9px;margin-top:8px}
+.report-summary{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;padding:20px}.report-summary>div{background:var(--panel2);border:1px solid var(--border);border-radius:11px;padding:15px}
+.report-summary span,.report-summary strong{display:block}.report-summary span{color:var(--muted);font-size:11px}.report-summary strong{margin-top:5px;font-size:18px}
+.report-box{padding:0 20px 20px}.report-box h4{margin-bottom:10px}.category-row{display:flex;justify-content:space-between;border-top:1px solid var(--border);padding:10px 0;font-size:12px}
+.toast{position:fixed;right:22px;bottom:22px;background:#f4f6ff;color:#11182b;border-radius:10px;padding:12px 16px;font-size:12px;font-weight:700;box-shadow:var(--shadow);transform:translateY(30px);opacity:0;pointer-events:none;transition:.25s;z-index:100}.toast.show{transform:translateY(0);opacity:1}
+.empty-state{text-align:center;color:var(--muted);padding:28px!important}
+.data-tools{display:flex;gap:8px;margin-left:auto}.data-tools button{white-space:nowrap}
+.notice{margin:0 0 18px;padding:12px 14px;border:1px solid rgba(108,99,255,.3);background:rgba(108,99,255,.08);border-radius:10px;color:#cfd3ff;font-size:11px}
+@media(max-width:1100px){.stats-grid{grid-template-columns:repeat(2,1fr)}.content-grid{grid-template-columns:1fr}}
+@media(max-width:780px){.sidebar{width:70px;padding:18px 10px}.brand{justify-content:center;padding-bottom:20px}.brand>div:last-child{display:none}.menu-item{font-size:0;justify-content:center}.menu-item span{font-size:18px}.status-card{justify-content:center;padding:10px 5px}.status-card div{display:none}.main-content{margin-left:70px;width:calc(100% - 70px);padding:0 15px 30px}.topbar{min-height:75px}.topbar-actions>span{display:none}.welcome-row,.page-heading{align-items:flex-start;flex-direction:column}.stats-grid{grid-template-columns:1fr}.toolbar{flex-wrap:wrap}.toolbar input[type=search],.toolbar select{max-width:none}.report-summary{grid-template-columns:1fr 1fr}.data-tools{width:100%;margin-left:0}.data-tools button{flex:1}}
+@media print{.sidebar,.topbar,.page-heading button,.toolbar,.quick-panel,.menu,.data-tools,.notice{display:none!important}.main-content{margin:0;width:100%}body{background:white;color:black}.panel{box-shadow:none;border:1px solid #ddd}.page{display:none!important}#reportsPage{display:block!important}}
+</style>
+</head>
+<body>
+<div class="app-shell">
+<aside class="sidebar">
+  <div class="brand"><div class="brand-logo">K</div><div><h1>KasKelas</h1><span>Class Finance System</span></div></div>
+  <nav class="menu">
+    <button class="menu-item active" data-page="dashboard"><span>▦</span> Dashboard</button>
+    <button class="menu-item" data-page="students"><span>♙</span> Data Siswa</button>
+    <button class="menu-item" data-page="transactions"><span>⇄</span> Transaksi</button>
+    <button class="menu-item" data-page="reports"><span>▤</span> Laporan</button>
+  </nav>
+  <div class="sidebar-bottom"><div class="status-card"><span class="status-dot"></span><div><strong>Penyimpanan Aktif</strong><small>Data tersimpan di browser</small></div></div></div>
+</aside>
+
+<main class="main-content">
+<header class="topbar">
+  <div><p class="eyebrow">SISTEM KEUANGAN KELAS</p><h2 id="pageTitle">Dashboard</h2></div>
+  <div class="topbar-actions"><span id="currentDate"></span><button class="icon-button" id="refreshButton" title="Refresh data">↻</button></div>
+</header>
+
+<section id="dashboardPage" class="page active">
+  <div class="welcome-row"><div><h3>Dashboard Kas Kelas</h3><p>Pantau pemasukan, pengeluaran, dan saldo kelas dengan mudah.</p></div><button class="primary-button" id="quickTransactionButton">+ Tambah Transaksi</button></div>
+  <div class="notice">Versi satu file: tidak membutuhkan Node.js, Express, database server, atau internet. Data tersimpan otomatis di browser perangkat ini.</div>
+  <div class="stats-grid">
+    <article class="stat-card balance-card"><div class="stat-icon">Rp</div><div><span>Saldo Saat Ini</span><strong id="balance">Rp0</strong></div></article>
+    <article class="stat-card income-card"><div class="stat-icon">↓</div><div><span>Total Pemasukan</span><strong id="income">Rp0</strong></div></article>
+    <article class="stat-card expense-card"><div class="stat-icon">↑</div><div><span>Total Pengeluaran</span><strong id="expense">Rp0</strong></div></article>
+    <article class="stat-card"><div class="stat-icon">♙</div><div><span>Jumlah Siswa</span><strong id="studentCount">0</strong></div></article>
+  </div>
+  <div class="content-grid">
+    <section class="panel"><div class="panel-header"><div><h3>Transaksi Terbaru</h3><p>8 transaksi terakhir</p></div><button class="text-button" data-page-target="transactions">Lihat semua →</button></div>
+      <div class="table-wrapper"><table><thead><tr><th>Tanggal</th><th>Keterangan</th><th>Siswa</th><th>Jenis</th><th>Nominal</th></tr></thead><tbody id="recentTransactions"></tbody></table></div>
+    </section>
+    <section class="panel quick-panel"><div class="panel-header"><div><h3>Aksi Cepat</h3><p>Kelola data kas</p></div></div>
+      <button class="quick-action" id="quickIncome"><span>＋</span><div><strong>Catat Pemasukan</strong><small>Tambah iuran atau pemasukan lain</small></div></button>
+      <button class="quick-action" id="quickExpense"><span>−</span><div><strong>Catat Pengeluaran</strong><small>Catat penggunaan uang kas</small></div></button>
+      <button class="quick-action" id="quickStudent"><span>♙</span><div><strong>Tambah Siswa</strong><small>Daftarkan anggota kelas</small></div></button>
+    </section>
+  </div>
+</section>
+
+<section id="studentsPage" class="page">
+  <div class="page-heading"><div><h3>Data Siswa</h3><p>Kelola daftar anggota kelas dan pantau total iuran mereka.</p></div><button class="primary-button" id="addStudentButton">+ Tambah Siswa</button></div>
+  <section class="panel"><div class="toolbar"><input type="search" id="studentSearch" placeholder="Cari nama atau NIS..."><div class="data-tools"><button class="secondary-button" id="exportButton">Ekspor Data</button><button class="secondary-button" id="importButton">Impor Data</button><input type="file" id="importFile" accept=".json" hidden></div></div>
+    <div class="table-wrapper"><table><thead><tr><th>No</th><th>Nama Siswa</th><th>NIS</th><th>Kelas</th><th>Total Iuran</th><th>Aksi</th></tr></thead><tbody id="studentTable"></tbody></table></div>
+  </section>
+</section>
+
+<section id="transactionsPage" class="page">
+  <div class="page-heading"><div><h3>Transaksi Kas</h3><p>Semua pemasukan dan pengeluaran tersimpan otomatis di browser.</p></div><button class="primary-button" id="addTransactionButton">+ Tambah Transaksi</button></div>
+  <section class="panel"><div class="toolbar"><select id="transactionFilter"><option value="">Semua transaksi</option><option value="income">Pemasukan</option><option value="expense">Pengeluaran</option></select><input type="month" id="transactionMonth"></div>
+    <div class="table-wrapper"><table><thead><tr><th>Tanggal</th><th>Kategori</th><th>Keterangan</th><th>Siswa</th><th>Jenis</th><th>Nominal</th><th>Aksi</th></tr></thead><tbody id="transactionTable"></tbody></table></div>
+  </section>
+</section>
+
+<section id="reportsPage" class="page">
+  <div class="page-heading"><div><h3>Laporan Keuangan</h3><p>Ringkasan pemasukan, pengeluaran, dan saldo berdasarkan periode.</p></div><button class="primary-button" id="printReportButton">Cetak Laporan</button></div>
+  <section class="panel report-panel"><div class="toolbar"><label for="reportMonth">Pilih bulan</label><input type="month" id="reportMonth"><button class="secondary-button" id="loadReportButton">Tampilkan</button></div>
+    <div class="report-summary"><div><span>Pemasukan</span><strong id="reportIncome">Rp0</strong></div><div><span>Pengeluaran</span><strong id="reportExpense">Rp0</strong></div><div><span>Saldo</span><strong id="reportBalance">Rp0</strong></div><div><span>Jumlah Transaksi</span><strong id="reportTransactions">0</strong></div></div>
+    <div class="report-box"><h4>Ringkasan Kategori</h4><div id="categoryReport"></div></div>
+  </section>
+</section>
+</main>
+</div>
+
+<div class="modal-backdrop" id="studentModal"><div class="modal"><div class="modal-header"><div><h3 id="studentModalTitle">Tambah Siswa</h3><p>Isi data siswa dengan benar.</p></div><button class="close-button" data-close-modal="studentModal">×</button></div>
+<form id="studentForm"><input type="hidden" id="studentId"><label>Nama Siswa<input type="text" id="studentName" required placeholder="Contoh: Ahmad Rizky"></label><label>NIS<input type="text" id="studentNis" required placeholder="Contoh: 001"></label><label>Kelas<input type="text" id="studentClass" required placeholder="Contoh: X RPL 1"></label><div class="form-actions"><button type="button" class="secondary-button" data-close-modal="studentModal">Batal</button><button type="submit" class="primary-button">Simpan Siswa</button></div></form>
+</div></div>
+
+<div class="modal-backdrop" id="transactionModal"><div class="modal"><div class="modal-header"><div><h3>Tambah Transaksi</h3><p>Data langsung disimpan di browser.</p></div><button class="close-button" data-close-modal="transactionModal">×</button></div>
+<form id="transactionForm"><label>Jenis Transaksi<select id="transactionType" required><option value="income">Pemasukan</option><option value="expense">Pengeluaran</option></select></label><label>Nominal<input type="number" id="transactionAmount" min="1" required placeholder="Contoh: 10000"></label><label>Kategori<input type="text" id="transactionCategory" required placeholder="Contoh: Iuran Kas"></label><label>Keterangan<input type="text" id="transactionDescription" required placeholder="Contoh: Iuran minggu ke-2"></label><label>Siswa <span class="optional">(opsional untuk pengeluaran)</span><select id="transactionStudent"><option value="">-- Tidak terkait siswa --</option></select></label><label>Tanggal<input type="date" id="transactionDate" required></label><div class="form-actions"><button type="button" class="secondary-button" data-close-modal="transactionModal">Batal</button><button type="submit" class="primary-button">Simpan Transaksi</button></div></form>
+</div></div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+"use strict";
+const STORAGE_KEY="kaskelas_pro_v1";
+let state=loadData();
+
+const $=s=>document.querySelector(s);
+const $$=s=>document.querySelectorAll(s);
+
+function defaultData(){return {students:[],transactions:[]};}
+function loadData(){
+  try{
+    const raw=localStorage.getItem(STORAGE_KEY);
+    if(!raw)return defaultData();
+    const data=JSON.parse(raw);
+    return {students:Array.isArray(data.students)?data.students:[],transactions:Array.isArray(data.transactions)?data.transactions:[]};
+  }catch(e){console.error(e);return defaultData();}
+}
+function saveData(){localStorage.setItem(STORAGE_KEY,JSON.stringify(state));}
+function nextId(items){return items.length?Math.max(...items.map(x=>Number(x.id)||0))+1:1;}
+function formatRupiah(v){return new Intl.NumberFormat("id-ID",{style:"currency",currency:"IDR",maximumFractionDigits:0}).format(Number(v)||0);}
+function todayISO(){const d=new Date(),off=d.getTimezoneOffset();return new Date(d.getTime()-off*60000).toISOString().slice(0,10);}
+function formatDate(date){if(!date)return"-";return new Intl.DateTimeFormat("id-ID",{day:"2-digit",month:"short",year:"numeric"}).format(new Date(date+"T00:00:00"));}
+function escapeHtml(v){return String(v??"").replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll('"',"&quot;").replaceAll("'","&#039;");}
+function showToast(message){const t=$("#toast");t.textContent=message;t.classList.add("show");clearTimeout(window.toastTimer);window.toastTimer=setTimeout(()=>t.classList.remove("show"),2600);}
+function openModal(id){$("#"+id).classList.add("open");}
+function closeModal(id){$("#"+id).classList.remove("open");}
+
+function summary(){
+  const income=state.transactions.filter(t=>t.type==="income").reduce((a,t)=>a+Number(t.amount),0);
+  const expense=state.transactions.filter(t=>t.type==="expense").reduce((a,t)=>a+Number(t.amount),0);
+  return {income,expense,balance:income-expense,students:state.students.length};
+}
+function studentName(id){return state.students.find(s=>Number(s.id)===Number(id))?.name||"-";}
+
+function navigate(page){
+  $$(".page").forEach(x=>x.classList.remove("active"));
+  $$(".menu-item").forEach(x=>x.classList.remove("active"));
+  $("#"+page+"Page").classList.add("active");
+  const menu=document.querySelector('[data-page="'+page+'"]');if(menu)menu.classList.add("active");
+  const titles={dashboard:"Dashboard",students:"Data Siswa",transactions:"Transaksi",reports:"Laporan"};
+  $("#pageTitle").textContent=titles[page]||"Dashboard";
+  if(page==="dashboard")loadDashboard();
+  if(page==="students")loadStudents();
+  if(page==="transactions")loadTransactions();
+  if(page==="reports")loadReport();
+}
+
+function loadDashboard(){
+  const s=summary();
+  $("#balance").textContent=formatRupiah(s.balance);
+  $("#income").textContent=formatRupiah(s.income);
+  $("#expense").textContent=formatRupiah(s.expense);
+  $("#studentCount").textContent=s.students;
+  const rows=[...state.transactions].sort((a,b)=>String(b.date).localeCompare(String(a.date))||Number(b.id)-Number(a.id)).slice(0,8);
+  $("#recentTransactions").innerHTML=rows.length?rows.map(t=>`<tr><td>${formatDate(t.date)}</td><td>${escapeHtml(t.description)}</td><td>${escapeHtml(studentName(t.studentId))}</td><td><span class="badge ${t.type}">${t.type==="income"?"Pemasukan":"Pengeluaran"}</span></td><td class="${t.type==="income"?"money-income":"money-expense"}">${t.type==="income"?"+":"-"}${formatRupiah(t.amount)}</td></tr>`).join(""):`<tr><td colspan="5" class="empty-state">Belum ada transaksi.</td></tr>`;
+}
+
+function loadStudents(){
+  const search=$("#studentSearch").value.trim().toLowerCase();
+  let students=state.students.map(s=>({...s,totalPaid:state.transactions.filter(t=>t.type==="income"&&Number(t.studentId)===Number(s.id)).reduce((a,t)=>a+Number(t.amount),0)}));
+  if(search)students=students.filter(s=>s.name.toLowerCase().includes(search)||String(s.nis).toLowerCase().includes(search));
+  $("#studentTable").innerHTML=students.length?students.map((s,i)=>`<tr><td>${i+1}</td><td><strong>${escapeHtml(s.name)}</strong></td><td>${escapeHtml(s.nis)}</td><td>${escapeHtml(s.className)}</td><td class="money-income">${formatRupiah(s.totalPaid)}</td><td><div class="action-buttons"><button class="small-button" onclick="editStudent(${s.id})">Edit</button><button class="small-button delete" onclick="deleteStudent(${s.id})">Hapus</button></div></td></tr>`).join(""):`<tr><td colspan="6" class="empty-state">Data siswa tidak ditemukan.</td></tr>`;
+}
+
+function loadTransactions(){
+  const type=$("#transactionFilter").value,month=$("#transactionMonth").value;
+  let rows=[...state.transactions];
+  if(type)rows=rows.filter(t=>t.type===type);
+  if(month)rows=rows.filter(t=>t.date.startsWith(month));
+  rows.sort((a,b)=>String(b.date).localeCompare(String(a.date))||Number(b.id)-Number(a.id));
+  $("#transactionTable").innerHTML=rows.length?rows.map(t=>`<tr><td>${formatDate(t.date)}</td><td>${escapeHtml(t.category)}</td><td>${escapeHtml(t.description)}</td><td>${escapeHtml(studentName(t.studentId))}</td><td><span class="badge ${t.type}">${t.type==="income"?"Pemasukan":"Pengeluaran"}</span></td><td class="${t.type==="income"?"money-income":"money-expense"}">${t.type==="income"?"+":"-"}${formatRupiah(t.amount)}</td><td><button class="small-button delete" onclick="deleteTransaction(${t.id})">Hapus</button></td></tr>`).join(""):`<tr><td colspan="7" class="empty-state">Belum ada transaksi untuk filter ini.</td></tr>`;
+}
+
+function loadReport(){
+  const month=$("#reportMonth").value;
+  let rows=[...state.transactions];if(month)rows=rows.filter(t=>t.date.startsWith(month));
+  const income=rows.filter(t=>t.type==="income").reduce((a,t)=>a+Number(t.amount),0);
+  const expense=rows.filter(t=>t.type==="expense").reduce((a,t)=>a+Number(t.amount),0);
+  $("#reportIncome").textContent=formatRupiah(income);$("#reportExpense").textContent=formatRupiah(expense);$("#reportBalance").textContent=formatRupiah(income-expense);$("#reportTransactions").textContent=rows.length;
+  const cats={};rows.forEach(t=>{const key=t.type+"|"+t.category;cats[key]=(cats[key]||0)+Number(t.amount);});
+  const entries=Object.entries(cats);
+  $("#categoryReport").innerHTML=entries.length?entries.map(([key,amount])=>{const [type,cat]=key.split("|");return `<div class="category-row"><span>${type==="income"?"Pemasukan":"Pengeluaran"} — ${escapeHtml(cat)}</span><strong class="${type==="income"?"money-income":"money-expense"}">${formatRupiah(amount)}</strong></div>`}).join(""):`<p class="empty-state">Belum ada data kategori.</p>`;
+}
+
+function resetStudentForm(){$("#studentForm").reset();$("#studentId").value="";$("#studentModalTitle").textContent="Tambah Siswa";}
+function openStudentModal(){resetStudentForm();openModal("studentModal");}
+function editStudent(id){
+  const s=state.students.find(x=>Number(x.id)===Number(id));if(!s)return;
+  $("#studentId").value=s.id;$("#studentName").value=s.name;$("#studentNis").value=s.nis;$("#studentClass").value=s.className;$("#studentModalTitle").textContent="Edit Siswa";openModal("studentModal");
+}
+function deleteStudent(id){
+  if(!confirm("Hapus siswa ini? Riwayat transaksi tetap disimpan, tetapi tidak lagi terhubung ke siswa."))return;
+  state.students=state.students.filter(s=>Number(s.id)!==Number(id));state.transactions=state.transactions.map(t=>Number(t.studentId)===Number(id)?{...t,studentId:null}:t);saveData();refreshAll();populateStudentSelect();showToast("Siswa berhasil dihapus.");
+}
+function deleteTransaction(id){
+  if(!confirm("Hapus transaksi ini? Saldo akan dihitung ulang."))return;
+  state.transactions=state.transactions.filter(t=>Number(t.id)!==Number(id));saveData();refreshAll();showToast("Transaksi berhasil dihapus.");
+}
+function populateStudentSelect(){
+  $("#transactionStudent").innerHTML='<option value="">-- Tidak terkait siswa --</option>'+state.students.map(s=>`<option value="${s.id}">${escapeHtml(s.name)} — ${escapeHtml(s.nis)}</option>`).join("");
+}
+function openTransactionModal(type="income"){
+  $("#transactionForm").reset();$("#transactionType").value=type;$("#transactionDate").value=todayISO();populateStudentSelect();openModal("transactionModal");
+}
+function refreshAll(){loadDashboard();const active=document.querySelector(".page.active")?.id;if(active==="studentsPage")loadStudents();if(active==="transactionsPage")loadTransactions();if(active==="reportsPage")loadReport();}
+
+$("#studentForm").addEventListener("submit",e=>{
+  e.preventDefault();
+  const id=$("#studentId").value,payload={name:$("#studentName").value.trim(),nis:$("#studentNis").value.trim(),className:$("#studentClass").value.trim()};
+  if(!payload.name||!payload.nis||!payload.className)return;
+  const duplicate=state.students.some(s=>String(s.nis).toLowerCase()===payload.nis.toLowerCase()&&String(s.id)!==String(id));
+  if(duplicate){showToast("NIS tersebut sudah terdaftar.");return;}
+  if(id){const s=state.students.find(x=>Number(x.id)===Number(id));if(s)Object.assign(s,payload);showToast("Data siswa berhasil diperbarui.");}
+  else{state.students.push({id:nextId(state.students),...payload});showToast("Siswa berhasil ditambahkan.");}
+  saveData();closeModal("studentModal");refreshAll();populateStudentSelect();
+});
+
+$("#transactionForm").addEventListener("submit",e=>{
+  e.preventDefault();
+  const amount=Number($("#transactionAmount").value),studentId=$("#transactionStudent").value;
+  const payload={type:$("#transactionType").value,amount,category:$("#transactionCategory").value.trim(),description:$("#transactionDescription").value.trim(),studentId:studentId?Number(studentId):null,date:$("#transactionDate").value};
+  if(!Number.isFinite(amount)||amount<=0||!payload.category||!payload.description||!payload.date){showToast("Lengkapi data transaksi terlebih dahulu.");return;}
+  state.transactions.push({id:nextId(state.transactions),...payload});saveData();closeModal("transactionModal");showToast("Transaksi berhasil disimpan.");refreshAll();
+});
+
+$$(".menu-item").forEach(b=>b.addEventListener("click",()=>navigate(b.dataset.page)));
+$$("[data-page-target]").forEach(b=>b.addEventListener("click",()=>navigate(b.dataset.pageTarget)));
+$$("[data-close-modal]").forEach(b=>b.addEventListener("click",()=>closeModal(b.dataset.closeModal)));
+$("#addStudentButton").addEventListener("click",openStudentModal);$("#quickStudent").addEventListener("click",openStudentModal);
+$("#addTransactionButton").addEventListener("click",()=>openTransactionModal("income"));$("#quickTransactionButton").addEventListener("click",()=>openTransactionModal("income"));$("#quickIncome").addEventListener("click",()=>openTransactionModal("income"));$("#quickExpense").addEventListener("click",()=>openTransactionModal("expense"));
+$("#studentSearch").addEventListener("input",loadStudents);$("#transactionFilter").addEventListener("change",loadTransactions);$("#transactionMonth").addEventListener("change",loadTransactions);$("#loadReportButton").addEventListener("click",loadReport);
+$("#printReportButton").addEventListener("click",()=>{navigate("reports");setTimeout(()=>window.print(),50)});
+$("#refreshButton").addEventListener("click",()=>{state=loadData();refreshAll();populateStudentSelect();showToast("Data berhasil diperbarui.");});
+
+document.querySelectorAll(".modal-backdrop").forEach(b=>b.addEventListener("click",e=>{if(e.target===b)b.classList.remove("open")}));
+document.addEventListener("keydown",e=>{if(e.key==="Escape")document.querySelectorAll(".modal-backdrop.open").forEach(m=>m.classList.remove("open"))});
+
+$("#exportButton").addEventListener("click",()=>{
+  const blob=new Blob([JSON.stringify(state,null,2)],{type:"application/json"});
+  const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="backup-kas-kelas.json";a.click();URL.revokeObjectURL(a.href);showToast("Backup data berhasil dibuat.");
+});
+$("#importButton").addEventListener("click",()=>$("#importFile").click());
+$("#importFile").addEventListener("change",e=>{
+  const file=e.target.files[0];if(!file)return;
+  const reader=new FileReader();
+  reader.onload=()=>{
+    try{
+      const data=JSON.parse(reader.result);
+      if(!Array.isArray(data.students)||!Array.isArray(data.transactions))throw new Error();
+      state={students:data.students,transactions:data.transactions};saveData();refreshAll();populateStudentSelect();showToast("Data berhasil diimpor.");
+    }catch(err){showToast("File backup tidak valid.");}
+    e.target.value="";
+  };reader.readAsText(file);
+});
+
+$("#currentDate").textContent=new Intl.DateTimeFormat("id-ID",{weekday:"long",day:"numeric",month:"long",year:"numeric"}).format(new Date());
+window.editStudent=editStudent;window.deleteStudent=deleteStudent;window.deleteTransaction=deleteTransaction;
+populateStudentSelect();refreshAll();
+</script>
+</body>
+</html>

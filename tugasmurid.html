@@ -1,0 +1,877 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Daftar Tugas</title>
+
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        body {
+            background: #E4ECE8;
+            min-height: 100vh;
+            padding: 22px 14px;
+            color: #40544b;
+
+            display: flex;
+            justify-content: center;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 720px;
+        }
+
+
+        /* =========================================
+           BOX UTAMA
+           ========================================= */
+
+        .box-utama {
+            background: #ffffff;
+            border-radius: 19px;
+            padding: 26px;
+
+            box-shadow:
+                0 7px 22px rgba(64, 84, 75, 0.07);
+        }
+
+
+        /* =========================================
+           HEADER
+           ========================================= */
+
+        .header {
+            margin-bottom: 22px;
+        }
+
+        .judul {
+            font-size: 25px;
+            font-weight: 700;
+            color: #40544b;
+            margin-bottom: 6px;
+        }
+
+        .subjudul {
+            font-size: 14px;
+            color: #83938c;
+            margin-bottom: 11px;
+        }
+
+        .badge {
+            display: inline-block;
+
+            padding: 7px 13px;
+
+            background: #E5F0EB;
+            color: #567267;
+
+            border-radius: 20px;
+
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .badge.beres {
+            background: #EEF1EF;
+            color: #78837E;
+        }
+
+
+        /* =========================================
+           DAFTAR TUGAS
+           ========================================= */
+
+        .daftar-tugas {
+            display: flex;
+            flex-direction: column;
+            gap: 13px;
+        }
+
+
+        /* =========================================
+           KARTU TUGAS
+           ========================================= */
+
+        .tugas {
+            border: 1px solid #E1E9E5;
+
+            border-radius: 15px;
+
+            padding: 18px 19px;
+
+            background: #FBFDFC;
+
+            transition: all 0.2s ease;
+        }
+
+        .tugas:hover {
+            border-color: #C9DAD2;
+
+            box-shadow:
+                0 4px 11px rgba(64, 84, 75, 0.05);
+        }
+
+        .tugas.selesai {
+            background: #F3F8F5;
+            border-color: #C8DED2;
+        }
+
+        .tugas-atas {
+            display: flex;
+
+            justify-content: space-between;
+
+            align-items: flex-start;
+
+            gap: 16px;
+        }
+
+        .tugas-kiri {
+            flex: 1;
+
+            display: flex;
+
+            align-items: flex-start;
+
+            gap: 11px;
+
+            min-width: 0;
+        }
+
+
+        /* =========================================
+           CHECKLIST
+           ========================================= */
+
+        .btn-check {
+            width: 21px;
+            height: 21px;
+
+            flex-shrink: 0;
+
+            margin-top: 2px;
+
+            border: 2px solid #C8D5CF;
+
+            background: #ffffff;
+
+            border-radius: 5px;
+
+            display: flex;
+
+            align-items: center;
+            justify-content: center;
+
+            color: transparent;
+
+            font-size: 12px;
+
+            font-weight: bold;
+
+            cursor: pointer;
+
+            transition: 0.2s;
+        }
+
+        .btn-check:hover {
+            border-color: #71907F;
+        }
+
+        .btn-check.aktif {
+            background: #5A8468;
+
+            border-color: #5A8468;
+
+            color: #ffffff;
+        }
+
+
+        /* =========================================
+           INFORMASI TUGAS
+           ========================================= */
+
+        .isi-tugas {
+            flex: 1;
+
+            min-width: 0;
+
+            transition: 0.2s;
+        }
+
+        .isi-tugas.selesai {
+            opacity: 0.45;
+
+            text-decoration: line-through;
+        }
+
+        .nama-guru {
+            font-size: 12px;
+
+            color: #91A099;
+
+            margin-bottom: 4px;
+        }
+
+        .nama-tugas {
+            font-size: 17px;
+
+            font-weight: 700;
+
+            color: #40544b;
+
+            margin-bottom: 5px;
+        }
+
+        .deskripsi {
+            font-size: 13px;
+
+            line-height: 1.5;
+
+            color: #788981;
+        }
+
+
+        /* =========================================
+           BAGIAN KANAN
+           ========================================= */
+
+        .tugas-kanan {
+            display: flex;
+
+            flex-direction: column;
+
+            align-items: flex-end;
+
+            gap: 7px;
+
+            flex-shrink: 0;
+        }
+
+
+        /* =========================================
+           DEADLINE
+           ========================================= */
+
+        .deadline {
+            background: #F2EDE4;
+
+            color: #927B5B;
+
+            padding: 6px 11px;
+
+            border-radius: 16px;
+
+            font-size: 12px;
+
+            font-weight: 600;
+
+            white-space: nowrap;
+
+            transition: 0.2s;
+        }
+
+        .deadline.selesai {
+            opacity: 0.45;
+        }
+
+        .deadline.hijau {
+            background: #E5F0EB;
+
+            color: #567267;
+        }
+
+
+        /* =========================================
+           TOMBOL UPLOAD
+           ========================================= */
+
+        .btn-upload {
+            display: inline-flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            padding: 7px 10px;
+
+            border: none;
+
+            background: #E7F0EB;
+
+            color: #526B60;
+
+            border-radius: 8px;
+
+            font-size: 11px;
+
+            font-weight: 600;
+
+            cursor: pointer;
+
+            transition: 0.2s;
+
+            white-space: nowrap;
+        }
+
+        .btn-upload:hover {
+            background: #DCEAE3;
+
+            transform: translateY(-1px);
+        }
+
+
+        /* =========================================
+           NAMA FILE
+           ========================================= */
+
+        .nama-file {
+            display: none;
+
+            max-width: 160px;
+
+            font-size: 10px;
+
+            color: #5A8468;
+
+            text-align: right;
+
+            word-break: break-word;
+        }
+
+        .nama-file.tampil {
+            display: block;
+        }
+
+
+        /* =========================================
+           TABLET
+           ========================================= */
+
+        @media (max-width: 700px) {
+
+            body {
+                padding: 17px 10px;
+            }
+
+            .box-utama {
+                padding: 22px;
+            }
+
+            .judul {
+                font-size: 24px;
+            }
+
+            .tugas {
+                padding: 16px;
+            }
+
+        }
+
+
+        /* =========================================
+           HP
+           ========================================= */
+
+        @media (max-width: 600px) {
+
+            body {
+                padding: 13px 8px;
+            }
+
+            .box-utama {
+                padding: 19px;
+
+                border-radius: 17px;
+            }
+
+            .judul {
+                font-size: 23px;
+            }
+
+            .subjudul {
+                font-size: 13px;
+            }
+
+            .tugas {
+                padding: 15px;
+            }
+
+            .tugas-atas {
+                flex-direction: column;
+
+                gap: 10px;
+            }
+
+            .tugas-kiri {
+                width: 100%;
+            }
+
+            .tugas-kanan {
+                width: 100%;
+
+                flex-direction: row;
+
+                align-items: center;
+
+                justify-content: flex-start;
+
+                padding-left: 32px;
+
+                flex-wrap: wrap;
+            }
+
+            .nama-file {
+                text-align: left;
+            }
+
+            .nama-tugas {
+                font-size: 16px;
+            }
+
+            .deskripsi {
+                font-size: 12px;
+            }
+
+        }
+
+
+        /* =========================================
+           HP KECIL
+           ========================================= */
+
+        @media (max-width: 430px) {
+
+            body {
+                padding: 10px 7px;
+            }
+
+            .box-utama {
+                padding: 16px;
+
+                border-radius: 16px;
+            }
+
+            .judul {
+                font-size: 21px;
+            }
+
+            .subjudul {
+                font-size: 12px;
+            }
+
+            .badge {
+                font-size: 11px;
+
+                padding: 6px 11px;
+            }
+
+            .tugas {
+                padding: 13px;
+            }
+
+            .tugas-kiri {
+                gap: 9px;
+            }
+
+            .tugas-kanan {
+                padding-left: 30px;
+            }
+
+            .deadline {
+                font-size: 11px;
+
+                padding: 6px 10px;
+            }
+
+            .btn-upload {
+                font-size: 10px;
+
+                padding: 6px 9px;
+            }
+
+        }
+
+    </style>
+</head>
+
+
+<body>
+
+    <div class="container">
+
+        <div class="box-utama">
+
+
+            <!-- HEADER -->
+
+            <div class="header">
+
+                <div class="judul">
+                    Daftar Tugas  📚
+                </div>
+
+                <div class="subjudul">
+                    Tugas yang perlu kamu kerjakan.
+                </div>
+
+                <div
+                    id="badge-tugas"
+                    class="badge">
+
+                    3 Tugas Aktif
+
+                </div>
+
+            </div>
+
+
+            <!-- DAFTAR TUGAS -->
+
+            <div class="daftar-tugas">
+
+
+                <!-- TUGAS 1 -->
+
+                <div class="tugas">
+
+                    <div class="tugas-atas">
+
+
+                        <div class="tugas-kiri">
+
+                            <button
+                                type="button"
+                                class="btn-check"
+                                onclick="toggleTugas(this)"
+                                title="Tandai selesai">
+
+                                ✓
+
+                            </button>
+
+
+                            <div class="isi-tugas">
+
+                                <div class="nama-guru">
+                                    Bu Nunuk
+                                </div>
+
+                                <div class="nama-tugas">
+                                    Matematika
+                                </div>
+
+                                <div class="deskripsi">
+                                    Latihan soal halaman 45-47.
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="tugas-kanan">
+
+                            <div class="deadline">
+                                Deadline 28 Sep
+                            </div>
+
+                            <label class="btn-upload">
+
+                                📤 Upload
+
+                                <input
+                                    type="file"
+                                    hidden
+                                    onchange="tampilkanNamaFile(
+                                        this,
+                                        'file-nunuk'
+                                    )"
+                                >
+
+                            </label>
+
+                            <div
+                                id="file-nunuk"
+                                class="nama-file">
+                            </div>
+
+                        </div>
+
+
+                    </div>
+
+                </div>
+
+
+                <!-- TUGAS 2 -->
+
+                <div class="tugas">
+
+                    <div class="tugas-atas">
+
+
+                        <div class="tugas-kiri">
+
+                            <button
+                                type="button"
+                                class="btn-check"
+                                onclick="toggleTugas(this)"
+                                title="Tandai selesai">
+
+                                ✓
+
+                            </button>
+
+
+                            <div class="isi-tugas">
+
+                                <div class="nama-guru">
+                                    Pak Teguh
+                                </div>
+
+                                <div class="nama-tugas">
+                                    Bahasa Indonesia
+                                </div>
+
+                                <div class="deskripsi">
+                                    Persiapkan presentasi kelompok.
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="tugas-kanan">
+
+                            <div class="deadline">
+                                Deadline 30 Sep
+                            </div>
+
+                            <label class="btn-upload">
+
+                                📤 Upload
+
+                                <input
+                                    type="file"
+                                    hidden
+                                    onchange="tampilkanNamaFile(
+                                        this,
+                                        'file-teguh'
+                                    )"
+                                >
+
+                            </label>
+
+                            <div
+                                id="file-teguh"
+                                class="nama-file">
+                            </div>
+
+                        </div>
+
+
+                    </div>
+
+                </div>
+
+
+                <!-- TUGAS 3 -->
+
+                <div class="tugas">
+
+                    <div class="tugas-atas">
+
+
+                        <div class="tugas-kiri">
+
+                            <button
+                                type="button"
+                                class="btn-check"
+                                onclick="toggleTugas(this)"
+                                title="Tandai selesai">
+
+                                ✓
+
+                            </button>
+
+
+                            <div class="isi-tugas">
+
+                                <div class="nama-guru">
+                                    Ms Wilda
+                                </div>
+
+                                <div class="nama-tugas">
+                                    Bahasa Inggris
+                                </div>
+
+                                <div class="deskripsi">
+                                    Membuat teks recount
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="tugas-kanan">
+
+                            <div class="deadline hijau">
+                                Deadline 27 Sep
+                            </div>
+
+                            <label class="btn-upload">
+
+                                📤 Upload
+
+                                <input
+                                    type="file"
+                                    hidden
+                                    onchange="tampilkanNamaFile(
+                                        this,
+                                        'file-wilda'
+                                    )"
+                                >
+
+                            </label>
+
+                            <div
+                                id="file-wilda"
+                                class="nama-file">
+                            </div>
+
+                        </div>
+
+
+                    </div>
+
+                </div>
+
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <script>
+
+
+        /* =========================================
+           CHECKLIST TUGAS
+           ========================================= */
+
+        function toggleTugas(button) {
+
+            const tugas =
+                button.closest(".tugas");
+
+            const isiTugas =
+                tugas.querySelector(".isi-tugas");
+
+            const deadline =
+                tugas.querySelector(".deadline");
+
+
+            button.classList.toggle("aktif");
+
+            tugas.classList.toggle("selesai");
+
+            isiTugas.classList.toggle("selesai");
+
+            deadline.classList.toggle("selesai");
+
+
+            updateBadge();
+
+        }
+
+
+        /* =========================================
+           UPDATE BADGE
+           ========================================= */
+
+        function updateBadge() {
+
+            const semuaTugas =
+                document.querySelectorAll(".tugas").length;
+
+            const tugasSelesai =
+                document.querySelectorAll(
+                    ".btn-check.aktif"
+                ).length;
+
+            const tugasAktif =
+                semuaTugas - tugasSelesai;
+
+            const badge =
+                document.getElementById("badge-tugas");
+
+
+            if (tugasAktif === 0) {
+
+                badge.textContent =
+                    "Semua Tugas Beres! 🎉";
+
+                badge.classList.add("beres");
+
+            } else {
+
+                badge.textContent =
+                    tugasAktif + " Tugas Aktif";
+
+                badge.classList.remove("beres");
+
+            }
+
+        }
+
+
+        /* =========================================
+           UPLOAD FILE
+           ========================================= */
+
+        function tampilkanNamaFile(
+            input,
+            targetId
+        ) {
+
+            const target =
+                document.getElementById(targetId);
+
+
+            if (input.files.length > 0) {
+
+                const file =
+                    input.files[0];
+
+                target.textContent =
+                    "✓ " + file.name;
+
+                target.classList.add("tampil");
+
+            } else {
+
+                target.textContent = "";
+
+                target.classList.remove("tampil");
+
+            }
+
+        }
+
+    </script>
+
+</body>
+</html>

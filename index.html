@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SEKELAS | Login Aplikasi Kelas</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            /* Palet baru: Cream hangar (60%), Lavender pucat (30%), Teal (10%) */
+            --bg-body: #F7F3EC;
+            --bg-card: #FFFFFF;
+            --primary-accent: #4A90A4;
+            --primary-accent-dark: #3A7280;
+            --secondary: #E6E6FA;
+            --secondary-light: #F0EEFF;
+            --text: #3A3A3A;
+            --text-light: #7A7A7A;
+            --border: rgba(74, 144, 164, 0.15);
+            --border-soft: rgba(74, 144, 164, 0.08);
+            --error: #C76B5C;
+            --error-light: rgba(199, 107, 92, 0.12);
+            --success: #4A90A4;
+            --shadow: 0 24px 60px rgba(58, 114, 128, 0.12);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+            background-color: var(--bg-body);
+            color: var(--text);
+            height: 100vh;
+            width: 100vw;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* ===== LOGIN CONTAINER ===== */
+        .login-container {
+            position: relative;
+            width: 100%;
+            max-width: 1000px;
+            height: 620px;
+            background: var(--bg-card);
+            border-radius: 30px;
+            box-shadow: var(--shadow);
+            display: flex;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.7);
+            margin: 20px;
+        }
+
+        /* ===== LEFT: FORM ===== */
+        .login-left {
+            flex: 1;
+            padding: 52px 48px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            position: relative;
+            z-index: 2;
+            background: linear-gradient(180deg, #FFFFFF 0%, #F7F3EC 100%);
+        }
+
+        .brand {
+            font-size: 12px;
+            font-weight: 800;
+            color: var(--primary-accent);
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-bottom: 24px;
+        }
+
+        .login-left h1 {
+            font-size: 30px;
+            font-weight: 800;
+            color: var(--text);
+            margin-bottom: 8px;
+            letter-spacing: -0.5px;
+        }
+
+        .login-left p.subtitle {
+            font-size: 14px;
+            color: var(--text-light);
+            margin-bottom: 36px;
+            line-height: 1.5;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: 8px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 13px 16px;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            font-family: inherit;
+            font-size: 14px;
+            color: var(--text);
+            background: var(--white);
+            outline: none;
+            transition: all 0.25s ease;
+        }
+
+        .form-group input::placeholder {
+            color: var(--text-light);
+        }
+
+        .form-group input:focus {
+            border-color: var(--primary-accent);
+            box-shadow: 0 0 0 4px rgba(74, 144, 164, 0.1);
+        }
+
+        .form-options {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 24px;
+            font-size: 12.5px;
+        }
+
+        .checkbox-label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--text-light);
+            cursor: pointer;
+        }
+
+        .checkbox-label input {
+            width: 16px;
+            height: 16px;
+            accent-color: var(--primary-accent);
+        }
+
+        .forgot {
+            color: var(--primary-accent);
+            font-weight: 700;
+            text-decoration: none;
+            font-size: 12.5px;
+        }
+
+        .forgot:hover {
+            text-decoration: underline;
+        }
+
+        .login-btn {
+            width: 100%;
+            padding: 14px;
+            background: var(--primary-accent);
+            color: var(--white);
+            border: none;
+            border-radius: 10px;
+            font-size: 15px;
+            font-weight: 800;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            margin-bottom: 12px;
+            box-shadow: 0 8px 20px rgba(74, 144, 164, 0.25);
+        }
+
+        .login-btn:hover {
+            background: var(--primary-accent-dark);
+            transform: translateY(-1px);
+        }
+
+        .login-btn:active {
+            transform: translateY(0);
+        }
+
+        /* Role select */
+        .role-wrapper {
+            margin-bottom: 24px;
+        }
+
+        .role-wrapper label {
+            display: block;
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .role-select {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            font-family: inherit;
+            font-size: 14px;
+            color: var(--text);
+            background: var(--white);
+            cursor: pointer;
+            outline: none;
+            transition: all 0.25s ease;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%234A90A4' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 14px center;
+        }
+
+        .role-select:focus {
+            border-color: var(--primary-accent);
+            box-shadow: 0 0 0 4px rgba(74, 144, 164, 0.1);
+        }
+
+        .role-select option {
+            background: var(--white);
+            color: var(--text);
+            padding: 12px;
+        }
+
+        /* Footer demo */
+        .footer-demo {
+            font-size: 12px;
+            color: var(--text-light);
+            text-align: center;
+            line-height: 1.5;
+        }
+
+        .footer-demo span {
+            color: var(--primary-accent);
+            font-weight: 800;
+        }
+
+        /* ===== RIGHT: IMAGE ===== */
+        .login-right {
+            flex: 1.1;
+            position: relative;
+            overflow: hidden;
+            min-height: 400px;
+        }
+
+        .class-photo {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        /* Overlay di atas foto - warm cream + lavender soft */
+        .login-right::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg,
+                rgba(247, 243, 236, 0.55) 0%,
+                rgba(230, 230, 250, 0.35) 100%);
+            z-index: 1;
+        }
+
+        /* ===== TOAST ===== */
+        #toast {
+            position: fixed;
+            bottom: 24px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: var(--text);
+            color: var(--white);
+            padding: 12px 22px;
+            border-radius: 12px;
+            font-size: 13px;
+            font-weight: 600;
+            box-shadow: 0 8px 24px rgba(58, 58, 58, 0.25);
+            transition: transform 0.3s ease, opacity 0.3s ease;
+            opacity: 0;
+            z-index: 1000;
+        }
+
+        #toast.show {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 900px) {
+            .login-container {
+                height: auto;
+                min-height: 650px;
+                flex-direction: column;
+                margin: 16px;
+            }
+
+            .login-left {
+                padding: 40px 32px;
+                min-height: 420px;
+            }
+
+            .login-right {
+                min-height: 240px;
+            }
+
+            .login-left h1 {
+                font-size: 24px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .login-left {
+                padding: 32px 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="login-container">
+        <!-- Left: Form -->
+        <div class="login-left">
+            <div class="brand">*SEKELAS</div>
+
+            <h1>Welcome back!</h1>
+            <p class="subtitle">Where the blossoms greet your return.</p>
+
+            <form id="loginForm" onsubmit="handleLogin(event)">
+                <div class="form-group">
+                    <label for="username">Email</label>
+                    <input type="text" id="username" placeholder="Masukkan username atau NIS" required autocomplete="username">
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" placeholder="Masukkan password" required autocomplete="current-password">
+                </div>
+
+                <div class="form-options">
+                    <label class="checkbox-label">
+                        <input type="checkbox"> Ingat saya
+                    </label>
+                    <a href="#" class="forgot">Lupa password?</a>
+                </div>
+
+                <button type="submit" class="login-btn">Masuk ke Aplikasi</button>
+
+                <div class="role-wrapper">
+                    <label for="role">Login Sebagai</label>
+                    <select id="role" class="role-select" required>
+                        <option value="">-- Pilih Role --</option>
+                        <option value="siswa">Siswa (Anggota Kelas)</option>
+                        <option value="pengurus">Pengurus Kelas</option>
+                        <option value="wali">Wali Kelas (Guru)</option>
+                    </select>
+                </div>
+            </form>
+
+            <div class="footer-demo">
+                <p>Demo: gunakan username <span>siswa1</span> atau <span>guru1</span> dengan password <span>123456</span></p>
+            </div>
+        </div>
+
+        <!-- Right: Foto Sekelas -->
+        <div class="login-right">
+            <img src="./assets/foto-kelas.jpg" alt="Foto Sekelas" class="class-photo">
+        </div>
+    </div>
+
+    <div id="toast"></div>
+
+    <script>
+        const USERS = [
+            { username: 'siswa1', password: '123456', role: 'siswa', name: 'Ahmad Ajriel Irfan', nis: '3113134417', class: 'X.E-4' },
+            { username: 'siswa2', password: '123456', role: 'siswa', name: 'Nabila Tsabita Putri M.', nis: '111982065', class: 'X.E-4' },
+            { username: 'pengurus1', password: '123456', role: 'pengurus', name: 'Keisha Niswatun Supriyanto', nis: '112591827', class: 'X.E-4', position: 'Ketua Kelas' },
+            { username: 'pengurus2', password: '123456', role: 'pengurus', name: 'Hanna Aulia', nis: '109410011', class: 'X.E-4', position: 'Wakil Ketua' },
+            { username: 'guru1', password: '123456', role: 'wali', name: 'Ms. Wilda Ulfiyanti M.Pd', nis: 'G-001', class: 'X.E-4', subject: 'Bahasa Inggris' },
+            { username: 'guru2', password: '123456', role: 'wali', name: 'Mr. Ahmad Yuwafi', nis: 'G-002', class: 'X.E-4', subject: 'Informatika' }
+        ];
+
+        function showToast(message, type = 'error') {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.style.background = type === 'success' ? '#4A90A4' : '#3A3A3A';
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 3000);
+        }
+
+        function handleLogin(e) {
+            e.preventDefault();
+            const username = document.getElementById('username').value.trim();
+            const password = document.getElementById('password').value;
+            const role = document.getElementById('role').value;
+
+            if (!username || !password || !role) {
+                showToast('Harap lengkapi semua field');
+                return;
+            }
+
+            const user = USERS.find(u => u.username === username && u.password === password && u.role === role);
+
+            if (user) {
+                showToast('Login berhasil! Mengarahkan...', 'success');
+                localStorage.setItem('sekelas_user', JSON.stringify(user));
+                setTimeout(() => {
+                    window.location.href = 'app.html';
+                }, 800);
+            } else {
+                showToast('Username, password, atau role tidak valid');
+            }
+        }
+    </script>
+</body>
+</html>
