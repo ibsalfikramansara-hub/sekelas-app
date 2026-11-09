@@ -32,6 +32,13 @@ if not exist ".git" (
     echo.
 )
 
+:: Pastikan identitas git tersetting
+git config user.email >nul 2>&1
+if %errorlevel% neq 0 (
+    git config user.email "admin@sekelas.sch.id"
+    git config user.name "Admin SEKELAS"
+)
+
 :: 4. Cek remote repository
 git remote -v | findstr "origin" >nul 2>&1
 if %errorlevel% neq 0 (
